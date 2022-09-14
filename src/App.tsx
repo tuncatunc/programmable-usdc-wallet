@@ -1,15 +1,14 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import './App.css';
-import { Counter } from './features/counter/Counter';
+import { AppRoutes } from "./routes"
+import { store } from "./app/store";
 
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline text-red-600">
-        Simple React Typescript Tailwind Sample
-      </h1>
-      <Counter />
-    </>
+    <Provider store={store}>
+      <AppRoutes />
+    </ Provider>
   );
 }
 

@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from "../features/counter/counterSlice"
+import hdWalletReducer from "../features/hdwallet/hdWalletSlice"
 export const store = configureStore({
   reducer: {
-    counter: counterReducer
+    counter: counterReducer,
+    hdWallet: hdWalletReducer
   },
 })
 
