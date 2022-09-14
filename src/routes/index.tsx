@@ -11,6 +11,8 @@ import { RestoreWallet } from "./RestoreWallet";
 import { SetPassword } from "./SetPassword"
 import { Password } from "./Password";
 import { Error } from "./Error";
+import { CreatePortfolio } from "./CreatePortfolio";
+import { Portfolios } from "./Portfolios";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
       {
         path: "password",
         element: <Password />
+      },
+      {
+        path: "create-portfolio",
+        element: <CreatePortfolio />
+      },
+      {
+        path: "portfolios",
+        element: <Portfolios />
       }
     ]
   }
