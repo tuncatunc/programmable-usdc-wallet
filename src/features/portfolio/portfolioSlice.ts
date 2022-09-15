@@ -2,74 +2,63 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 import internal from "stream";
 
-enum PortfolioType {
-  Even,
-  Rational,
-  RationalPriority
+export enum PortfolioType {
+  Even = "Even",
+  Rational = "Rational",
+  RationalPriority = "Rational Priority"
 };
 
-class Subaccount {
-  public index: number;   // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
-  public targetAmount: number; // Valid for `Rational` & `RationalPriority`
-  public isPriority: boolean;
-
-  public constructor(index: number, targetAmount: number, isPriority: boolean) {
-    this.index = index;
-    this.targetAmount = targetAmount;
-    this.isPriority = isPriority;
-  }
+export interface Subaccount {
+  index: number;   // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
+  goal: number; // Valid for `Rational` & `RationalPriority`
 }
 
-class Portfolio {
-  public type: PortfolioType;
-  public index: number;  // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
-  public accounts: Subaccount[];
-
-  public constructor(type: PortfolioType, index: number, accounts: Subaccount[])
-  {
-    this.type = type;
-    this.index = index;
-    this.accounts = accounts;
-  }
+export type Portfolio = {
+  type: PortfolioType;
+  index: number;  // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
+  subaccounts: Subaccount[];
 }
 
-export interface PortfolioState {
+export interface PortfoliosState {
   portfolios: Portfolio[]
 }
 
-const initialState: PortfolioState = {
+const initialState: PortfoliosState = {
   portfolios: []
 }
 
 interface CreatePortfolioActionType {
   noAccounts: number;
-  type: PortfolioType
+  type: PortfolioType;
+  goals: number[]
 }
 
-export const portfolioSlice = createSlice({
-  name: "portfolio",
+export const portfoliosSlice = createSlice({
+  name: "portfolios",
   initialState,
   reducers: {
     createPortfolio: (state, action: PayloadAction<CreatePortfolioActionType>) => {
+      // Build subaccounts
       const subaccounts: Subaccount[] = []
       for (let index = 0; index < action.payload.noAccounts; index++) {
-        subaccounts.push(new Subaccount(index, ))
-        
-      }
-      const accounts: Subaccount = {
-        index
+        let subaccount: Subaccount = {
+          index,
+          goal: action.payload.goals[index],
+        }
+        subaccounts.push(subaccount)
       }
 
+      // Add to portfolio
       const portfolio: Portfolio = {
         type: action.payload.type,
         index: state.portfolios.length,
-        accounts
+        subaccounts: subaccounts
       }
     }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const {increment, decrement, incrementByAmount} = counterSlice.actions
+export const {createPortfolio} = portfoliosSlice.actions
 
-export default counterSlice.reducer
+export default portfoliosSlice.reducer
