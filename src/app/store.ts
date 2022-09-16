@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from "../features/counter/counterSlice"
-import hdWalletReducer from "../features/hdwallet/hdWalletSlice"
+import portfolioReducer from "../features/portfolio/portfolioSlice"
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    hdWallet: hdWalletReducer
+    portfolio: portfolioReducer
   },
 })
 

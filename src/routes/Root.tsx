@@ -16,7 +16,7 @@ export const Root = (props: Props) => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="sm">
+      <Container>
         <BottomNavigation
           showLabels
           value={value}
@@ -36,7 +36,7 @@ export const Root = (props: Props) => {
             icon={<AddPortfolioIcon />}
           />
         </BottomNavigation>
-        <Box sx={{ bgcolor: '#cfe8fc', height: '100vh', margin: '10px' }}>
+        <Box sx={{ height: '100vh' }}>
           <Outlet />
         </Box>
       </Container>

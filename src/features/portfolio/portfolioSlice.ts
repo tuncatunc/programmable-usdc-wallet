@@ -9,7 +9,7 @@ export enum PortfolioType {
 };
 
 export interface Subaccount {
-  index: number;   // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
+  index: number;
   goal: number; // Valid for `Rational` & `RationalPriority`
 }
 
@@ -27,7 +27,7 @@ const initialState: PortfoliosState = {
   portfolios: []
 }
 
-interface CreatePortfolioActionType {
+export interface CreatePortfolioActionType {
   noAccounts: number;
   type: PortfolioType;
   goals: number[]
