@@ -13,14 +13,15 @@ export interface Subaccount {
   goal: number; // Valid for `Rational` & `RationalPriority`
 }
 
-export type Portfolio = {
+export type IPortfolio = {
   type: PortfolioType;
   index: number;  // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
+  noSubaccounts: number;
   subaccounts: Subaccount[];
 }
 
 export interface PortfoliosState {
-  portfolios: Portfolio[]
+  portfolios: IPortfolio[]
 }
 
 const initialState: PortfoliosState = {
@@ -49,9 +50,10 @@ export const portfoliosSlice = createSlice({
       }
 
       // Add to portfolio
-      const portfolio: Portfolio = {
+      const portfolio: IPortfolio = {
         type: action.payload.type,
         index: state.portfolios.length,
+        noSubaccounts: subaccounts.length,
         subaccounts: subaccounts
       }
     }
