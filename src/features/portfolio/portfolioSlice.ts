@@ -16,17 +16,10 @@ export interface Subaccount {
 export type IPortfolio = {
   type: PortfolioType;
   index: number;  // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
-  noSubaccounts: number;
   subaccounts: Subaccount[];
 }
 
-export interface PortfoliosState {
-  portfolios: IPortfolio[]
-}
-
-const initialState: PortfoliosState = {
-  portfolios: []
-}
+const initialState : IPortfolio[] = []
 
 
 export const portfoliosSlice = createSlice({
@@ -34,7 +27,7 @@ export const portfoliosSlice = createSlice({
   initialState,
   reducers: {
     createPortfolio: (state, action: PayloadAction<IPortfolio>) => {
-      state.portfolios.push(action.payload);
+      state.push(action.payload)
     }
   }
 })

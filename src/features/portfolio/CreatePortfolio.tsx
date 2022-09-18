@@ -21,6 +21,7 @@ export const CreatePortfolio = () => {
   const {
     control,
     formState: { isValid, errors },
+    getValues,
     handleSubmit
   } = useForm<IPortfolio>(
     {
@@ -29,7 +30,7 @@ export const CreatePortfolio = () => {
       resolver: yupResolver(portfolioSchema)
     }
   );
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "subaccounts", // unique name for your Field Array
   });
@@ -73,9 +74,10 @@ export const CreatePortfolio = () => {
           aria-label="add subaccount"
           onClick={
             () => {
+              const ni = getValues().subaccounts.length
               let sa: Subaccount = {
                 goal: 0,
-                index: 1
+                index: ni
               }
               append(sa);
             }
