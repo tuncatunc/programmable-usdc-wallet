@@ -4,15 +4,13 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import { useSelector, useDispatch } from "react-redux"
+import {  useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 import { createPortfolio, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
 import { portfolioSchema } from "./PortfolioSchema";
-import { useState } from "react";
 
 export const CreatePortfolio = () => {
 

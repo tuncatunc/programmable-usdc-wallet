@@ -12,5 +12,5 @@ export const portfolioSchema =  Yup.object().shape({
           .required("Goal is required")
           .transform(ensureNumber)
       })
-    )
+    ).min(1)
 });
