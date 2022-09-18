@@ -36,9 +36,7 @@ export const Root = (props: Props) => {
             icon={<AddPortfolioIcon />}
           />
         </BottomNavigation>
-        <Box sx={{ height: '100vh' }}>
-          <Outlet />
-        </Box>
+        <Outlet />
       </Container>
     </React.Fragment>
   )

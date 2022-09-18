@@ -1,28 +1,40 @@
-import * as React from "react"
-import { Typography, Grid, Button, Input, TextField } from "@mui/material"
+import { MenuItem, Typography, Grid, Button, Select, TextField } from "@mui/material"
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
-import MenuItem from '@mui/material/MenuItem';
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSelector, useDispatch } from "react-redux"
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-import { createPortfolio, CreatePortfolioActionType, PortfolioType, IPortfolio } from "./portfolioSlice"
-import type { RootState } from '../../app/store'
-
+import { createPortfolio, CreatePortfolioActionType, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
+import { portfolioSchema } from "./PortfolioSchema";
+import { useState } from "react";
 
 export const CreatePortfolio = () => {
 
-  const MAX_NUM_SUBACCOUTS = 5;
-
-  const { handleSubmit, reset, setValue, control, watch, register } = useForm<IPortfolio>();
-
-  const portfolio = useSelector((state: RootState) => state.portfolio)
-  const dispatch = useDispatch()
-  const noSubaccounts = watch("noSubaccounts")
+  const {
+    control,
+    setValue,
+    getValues,
+    formState: { isValid }
+  } = useForm<IPortfolio>(
+    {
+      mode: "onChange",
+      reValidateMode: "onChange",
+      resolver: yupResolver(portfolioSchema)
+    }
+  );
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "subaccounts", // unique name for your Field Array
+  });
 
   return (
-    <Grid container spacing={2} margin={2}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant="h2" marginBottom={3}>Create Portfolio</ Typography>
       </Grid>
@@ -33,8 +45,11 @@ export const CreatePortfolio = () => {
           name="type"
           control={control}
           defaultValue={PortfolioType.Even}
+          rules={{ required: true }}
           render={({ field }) => (
-            <Select {...field}
+            <Select
+              fullWidth
+              {...field}
             >
               <MenuItem value={PortfolioType.Even}>{PortfolioType.Even}</MenuItem>
               <MenuItem value={PortfolioType.Rational}>{PortfolioType.Rational}</MenuItem>
@@ -48,43 +63,58 @@ export const CreatePortfolio = () => {
         <Typography variant="h4" marginBottom={2}>Accounts</ Typography>
       </Grid>
 
-      {/* Number of Accounts */}
+      {/* Add new account */}
       <Grid item xs={12}>
-        <Controller
-          name="noSubaccounts"
-          control={control}
-          defaultValue={2}
-          render={({ field }) => (
-            <Select {...field}
-            >
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-            </Select>
-
-          )}
-        />
+        <IconButton
+          color="primary"
+          aria-label="add subaccount"
+          onClick={
+            () => {
+              let sa: Subaccount = {
+                goal: 0,
+                index: 1
+              }
+              append(sa);
+            }
+          }
+        >
+          <AddIcon />
+        </IconButton>
       </Grid>
+
       {
-        Array.from({ length: noSubaccounts }).map((_, i) => (
+        fields.map((field, index) => (
           <>
             <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               {/* TODO: Create account address from derivation path */}
               <Jazzicon diameter={40} seed={jsNumberForAddress("0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915")} />
             </Grid>
-            <Grid item xs={10} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+            <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
               <Controller
-                name={`subaccounts.${i}.goal`}
+                key={field.id}
+                {...{control, index, field}}
+                name={`subaccounts.${index}.goal`}
                 // name={`subaccounts.${index}.goal`}
                 control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField onChange={onChange} value={value} label={"Text Value"} />
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField fullWidth label={"Goal $USDC"} type="number" {...field}/>
                 )}
-        
-              />
 
+              />
+            </Grid>
+            <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <IconButton
+                color="primary"
+                aria-label="remove subaccount"
+                onClick={
+                  () => {
+                    remove(field.index)
+                  }
+                }
+              >
+                <RemoveIcon />
+              </IconButton>
             </Grid>
           </>
         ))
@@ -93,11 +123,14 @@ export const CreatePortfolio = () => {
       {/* Create */}
       <Grid item xs={12} sx={{ paddingTop: 20 }}>
         <Button
-          sx={{ width: "80%" }}
+          fullWidth
           variant="contained"
+          disabled={!isValid}
         >
           Create Accounts
         </Button>
       </Grid>
+      <DevTool control={control} /> {/* set up the dev tool */}
+
     </Grid>)
 }
