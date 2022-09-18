@@ -28,34 +28,13 @@ const initialState: PortfoliosState = {
   portfolios: []
 }
 
-export interface CreatePortfolioActionType {
-  noAccounts: number;
-  type: PortfolioType;
-  goals: number[]
-}
 
 export const portfoliosSlice = createSlice({
   name: "portfolios",
   initialState,
   reducers: {
-    createPortfolio: (state, action: PayloadAction<CreatePortfolioActionType>) => {
-      // Build subaccounts
-      const subaccounts: Subaccount[] = []
-      for (let index = 0; index < action.payload.noAccounts; index++) {
-        let subaccount: Subaccount = {
-          index,
-          goal: action.payload.goals[index],
-        }
-        subaccounts.push(subaccount)
-      }
-
-      // Add to portfolio
-      const portfolio: IPortfolio = {
-        type: action.payload.type,
-        index: state.portfolios.length,
-        noSubaccounts: subaccounts.length,
-        subaccounts: subaccounts
-      }
+    createPortfolio: (state, action: PayloadAction<IPortfolio>) => {
+      state.portfolios.push(action.payload);
     }
   }
 })

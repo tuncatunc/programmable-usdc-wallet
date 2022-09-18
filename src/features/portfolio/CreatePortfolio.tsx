@@ -10,16 +10,18 @@ import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { createPortfolio, CreatePortfolioActionType, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
+import { createPortfolio, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
 import { portfolioSchema } from "./PortfolioSchema";
 import { useState } from "react";
 
 export const CreatePortfolio = () => {
 
+  const dispatch = useDispatch();
+
   const {
     control,
     formState: { isValid, errors },
-    getValues
+    handleSubmit
   } = useForm<IPortfolio>(
     {
       mode: "onChange",
@@ -34,6 +36,7 @@ export const CreatePortfolio = () => {
 
   console.log('erros', errors)
   return (
+
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant="h2" marginBottom={3}>Create Portfolio</ Typography>
@@ -92,7 +95,7 @@ export const CreatePortfolio = () => {
             <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
               <Controller
                 key={field.id}
-                {...{control, index, field}}
+                {...{ control, index, field }}
                 name={`subaccounts.${index}.goal`}
                 rules={{ required: true }}
                 render={({ field }) => {
@@ -101,8 +104,8 @@ export const CreatePortfolio = () => {
                       fullWidth
                       label={"Goal $USDC"}
                       type="number" {...field}
-                      error={errors?.subaccounts && errors.subaccounts [index] ?.goal?.message != undefined}
-                      helperText={errors?.subaccounts && errors.subaccounts [index] ?.goal?.message } />
+                      error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
+                      helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
                   );
                 }}
 
@@ -131,6 +134,15 @@ export const CreatePortfolio = () => {
           fullWidth
           variant="contained"
           disabled={!isValid}
+          onClick={
+            handleSubmit(
+              (portfolio, e) => {
+                dispatch(createPortfolio(portfolio))
+              },
+              (errors, e) => {
+                console.log(errors)
+              })
+          }
         >
           Create Accounts
         </Button>
