@@ -18,9 +18,8 @@ export const CreatePortfolio = () => {
 
   const {
     control,
-    setValue,
-    getValues,
-    formState: { isValid }
+    formState: { isValid, errors },
+    getValues
   } = useForm<IPortfolio>(
     {
       mode: "onChange",
@@ -33,6 +32,7 @@ export const CreatePortfolio = () => {
     name: "subaccounts", // unique name for your Field Array
   });
 
+  console.log('erros', errors)
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -94,12 +94,17 @@ export const CreatePortfolio = () => {
                 key={field.id}
                 {...{control, index, field}}
                 name={`subaccounts.${index}.goal`}
-                // name={`subaccounts.${index}.goal`}
-                control={control}
                 rules={{ required: true }}
-                render={({ field }) => (
-                  <TextField fullWidth label={"Goal $USDC"} type="number" {...field}/>
-                )}
+                render={({ field }) => {
+                  return (
+                    <TextField
+                      fullWidth
+                      label={"Goal $USDC"}
+                      type="number" {...field}
+                      error={errors?.subaccounts && errors.subaccounts [index] ?.goal?.message != undefined}
+                      helperText={errors?.subaccounts && errors.subaccounts [index] ?.goal?.message } />
+                  );
+                }}
 
               />
             </Grid>
