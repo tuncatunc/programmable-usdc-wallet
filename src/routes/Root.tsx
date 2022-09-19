@@ -7,6 +7,7 @@ import PortfolioListIcon from '@mui/icons-material/FormatListNumbered';
 import AddPortfolioIcon from '@mui/icons-material/AddCircleOutline';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
+import { WalletMultiButton } from '@solana/wallet-adapter-material-ui';
 
 
 type Props = {}
@@ -34,6 +35,10 @@ export const Root = (props: Props) => {
             component={Link}
             to="/create-portfolio"
             icon={<AddPortfolioIcon />}
+          />
+          <BottomNavigationAction
+            label="Wallet"
+            component={() => <WalletMultiButton />}
           />
         </BottomNavigation>
         <Outlet />

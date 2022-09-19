@@ -3,11 +3,9 @@ import { Provider } from 'react-redux';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { FakeWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
-  WalletDialogProvider,
-  WalletDisconnectButton,
-  WalletMultiButton
+  WalletDialogProvider
 } from '@solana/wallet-adapter-material-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 
@@ -32,7 +30,7 @@ function App() {
        * will be compiled into your application, and only the dependencies of wallets that
        * your users connect to will be loaded.
        */
-      new FakeWalletAdapter(),
+      new PhantomWalletAdapter(),
     ],
     []
   );
@@ -41,8 +39,6 @@ function App() {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletDialogProvider>
-          <WalletMultiButton />
-          <WalletDisconnectButton />
           <Provider store={store}>
             <StyledEngineProvider injectFirst>
               <AppRoutes />
