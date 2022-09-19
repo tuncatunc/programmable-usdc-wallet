@@ -38,7 +38,7 @@ export const Root = (props: Props) => {
           />
           <BottomNavigationAction
             label="Wallet"
-            component={() => <WalletMultiButton />}
+            component={() => <WalletMultiButton variant="text" />}
           />
         </BottomNavigation>
         <Outlet />
