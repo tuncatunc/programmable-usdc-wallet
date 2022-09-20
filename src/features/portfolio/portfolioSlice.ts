@@ -15,6 +15,7 @@ export interface Subaccount {
 
 export type IPortfolio = {
   type: PortfolioType;
+  name: string;
   index: number;  // Corresponds to portfolio index in BIP-44 path `m/44'/501'/${portfolio index}'/${subaccount index}'`;
   subaccounts: Subaccount[];
 }

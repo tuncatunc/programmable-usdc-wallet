@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import {  useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,19 +28,38 @@ export const CreatePortfolio = () => {
       resolver: yupResolver(portfolioSchema)
     }
   );
+
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "subaccounts", // unique name for your Field Array
   });
 
-  console.log('erros', errors)
   return (
 
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h2" marginBottom={3}>Create Portfolio</ Typography>
+        <Typography variant="h1" marginBottom={3}>Create Portfolio</ Typography>
       </Grid>
 
+      {/* Portfolio Name */}
+      <Grid item xs={12}>
+        <Controller
+          name={`name`}
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => {
+            return (
+              <TextField
+                fullWidth
+                label={"Portfolio Name"}
+                {...field}
+                error={errors?.name?.message != undefined}
+                helperText={errors?.name?.message} />
+            );
+          }}
+
+        />
+      </Grid>
       {/* Portfolio Type */}
       <Grid item xs={12}>
         <Controller
@@ -52,6 +71,7 @@ export const CreatePortfolio = () => {
             <Select
               fullWidth
               {...field}
+              label={"Portfolio Type"}
             >
               <MenuItem value={PortfolioType.Even}>{PortfolioType.Even}</MenuItem>
               <MenuItem value={PortfolioType.Rational}>{PortfolioType.Rational}</MenuItem>
