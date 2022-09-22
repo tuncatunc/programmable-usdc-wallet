@@ -13,6 +13,7 @@ import { Password } from "./Password";
 import { Error } from "./Error";
 import { CreatePortfolio } from "./CreatePortfolio";
 import { Portfolios } from "./Portfolios";
+import { Mnemonic } from "./Mnemonic";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "portfolios",
         element: <Portfolios />
+      },
+      {
+        path: "mnemonic",
+        element: <Mnemonic />
       }
     ]
   }

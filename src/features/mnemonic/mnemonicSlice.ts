@@ -2,8 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const NUM_OF_WORDS = 12;
 
-export interface IMnemonic {
-  words: string[];
+export interface IWord {
+  word: string;
+  index: number;
+}
+
+export type IMnemonic = {
+  words: IWord[]
 }
 
 const initialState: IMnemonic = {
@@ -11,11 +16,16 @@ const initialState: IMnemonic = {
 }
 
 export const mnemonicSlice = createSlice({
-  name: "hdwallet",
+  name: "mnemonic",
   initialState,
   reducers: {
-    setMnemonic: (state, action: PayloadAction<IMnemonic>) => {
-      state.words = action.payload.words;
+    setWord: (state, action: PayloadAction<IWord>) => {
+      state.words[action.payload.index] = action.payload
     },
   }
 })
+
+// Action creators are generated for each case reducer function
+export const { setWord } = mnemonicSlice.actions
+
+export default mnemonicSlice.reducer

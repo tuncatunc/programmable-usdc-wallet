@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import portfolioReducer from "../features/portfolio/portfolioSlice"
+import mnemonicReducer from "../features/mnemonic/mnemonicSlice"
+
 export const store = configureStore({
   reducer: {
-    portfolios: portfolioReducer
+    portfolios: portfolioReducer,
+    mnemonic: mnemonicReducer
   },
 })
 
