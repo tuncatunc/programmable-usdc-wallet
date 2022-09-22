@@ -1,6 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
-import internal from "stream";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum PortfolioType {
   Even = "Even",
@@ -21,7 +19,6 @@ export type IPortfolio = {
 }
 
 const initialState : IPortfolio[] = []
-
 
 export const portfoliosSlice = createSlice({
   name: "portfolios",
