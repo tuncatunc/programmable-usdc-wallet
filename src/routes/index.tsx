@@ -1,8 +1,10 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
+  useNavigate,
 } from "react-router-dom";
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 import { Root } from "./Root"
 import { Start } from "./Start";
@@ -57,6 +59,7 @@ const router = createBrowserRouter([
   }
 ]);
 
-export const AppRoutes: React.FC = (): ReactElement => (
-  <RouterProvider router={router} />
-)
+export const AppRoutes: React.FC = (): ReactElement => {
+  return <RouterProvider router={router} />
+
+}
