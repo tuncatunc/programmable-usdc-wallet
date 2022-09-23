@@ -6,5 +6,13 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     esbuildOptions: { target: "es2020" }
+  },
+  define: {
+    'process.env': {}
+  },
+  resolve: {
+    alias: {
+      stream: 'stream-browserify',
+    },
   }
 })
