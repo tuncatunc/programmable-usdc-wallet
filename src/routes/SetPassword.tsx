@@ -1,9 +1,3 @@
 import React, { ReactElement } from "react";
-
-export const SetPassword: React.FC = (): ReactElement => {
-  return (
-    <div>
-      Set Password
-    </div>
-  )
-}
+import { SetPassword as SPW } from "../features/password/SetPassword";
+export const SetPassword: React.FC = (): ReactElement => <SPW />

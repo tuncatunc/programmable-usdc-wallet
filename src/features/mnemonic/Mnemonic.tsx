@@ -2,13 +2,12 @@ import { useDispatch } from "react-redux"
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Keypair } from "@solana/web3.js";
-import * as bip39 from "bip39";
-import { derivePath } from "ed25519-hd-key";
 
 import { IMnemonic, mnemonicSlice, setWord } from "./mnemonicSlice";
 import { mnemonicSchema } from "./MnemonicSchema"
 import { DevTool } from "@hookform/devtools";
+import { useNavigate } from "react-router-dom";
+
 
 export const Mnemonic = () => {
 
@@ -35,6 +34,9 @@ export const Mnemonic = () => {
     control,
     name: "words",
   })
+
+  const navigate = useNavigate();
+
 
   return (
     <Grid container spacing={2}>
@@ -76,18 +78,8 @@ export const Mnemonic = () => {
           onClick={
             handleSubmit(
               (mnemonic, e) => {
-                const mn: string = mnemonic.words.join(" ")
-                const seed = bip39.mnemonicToSeedSync(mn, ""); // (mnemonic, password)
 
-                for (let i = 0; i < 10; i++) {
-                  const path = `m/44'/501'/${i}'/0'`;
-                  const keypair = Keypair.fromSeed(derivePath(path, seed.toString("hex")).key);
-                  console.log(`${path} => ${keypair.publicKey.toBase58()}`);
-                }
-                
-                // console.log(mnemonic)
-                for(let i = 0; i < mnemonic.words.length; i++)
-                {
+                for (let i = 0; i < mnemonic.words.length; i++) {
                   dispatch(
                     setWord(
                       {
@@ -97,7 +89,9 @@ export const Mnemonic = () => {
                     )
                   )
                 }
-                // dispatch(setWord(portfolio))
+
+                // Navigate to /set-password page
+                navigate("/set-password")
               },
               (errors, e) => {
                 console.log(errors)
