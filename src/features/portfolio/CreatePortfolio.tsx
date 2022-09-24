@@ -2,8 +2,8 @@ import { MenuItem, Typography, Grid, Button, Select, TextField } from "@mui/mate
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Jdenticon from 'react-jdenticon';
 
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -34,6 +34,8 @@ export const CreatePortfolio = () => {
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "subaccounts", // unique name for your Field Array
   });
+
+  const { type } = getValues()
 
   return (
 
@@ -95,7 +97,7 @@ export const CreatePortfolio = () => {
             () => {
               const ni = getValues().subaccounts.length
               let sa: Subaccount = {
-                goal: 0,
+                goal: 10,
                 index: ni
               }
               append(sa);
@@ -107,46 +109,76 @@ export const CreatePortfolio = () => {
       </Grid>
 
       {
-        fields.map((field, index) => (
-          <>
-            <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              {/* TODO: Create account address from derivation path */}
-              <Jazzicon diameter={40} seed={jsNumberForAddress("0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915")} />
-            </Grid>
-            <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
-              <Controller
-                key={field.id}
-                {...{ control, index, field }}
-                name={`subaccounts.${index}.goal`}
-                rules={{ required: true }}
-                render={({ field }) => {
-                  return (
-                    <TextField
-                      fullWidth
-                      label={"Goal $USDC"}
-                      type="number" {...field}
-                      error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
-                      helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
-                  );
-                }}
-
-              />
-            </Grid>
-            <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <IconButton
-                color="primary"
-                aria-label="remove subaccount"
-                onClick={
-                  () => {
-                    remove(field.index)
+        fields.map((field, index) => {
+          
+          if (type == PortfolioType.Even)
+          {
+            return <>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                {/* TODO: Create account address from derivation path */}
+                <Jdenticon size={40} seed={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="caption">{`Account #${index}`}</Typography>
+              </Grid>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <IconButton
+                  color="primary"
+                  aria-label="remove subaccount"
+                  onClick={
+                    () => {
+                      remove(field.index)
+                    }
                   }
-                }
-              >
-                <RemoveIcon />
-              </IconButton>
-            </Grid>
-          </>
-        ))
+                >
+                  <RemoveIcon />
+                </IconButton>
+              </Grid>
+
+            </>
+          }
+          
+          return (
+            <>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                {/* TODO: Create account address from derivation path */}
+                <Jdenticon size={40} seed={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+              </Grid>
+              <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                <Controller
+                  key={field.id}
+                  {...{ control, index, field }}
+                  name={`subaccounts.${index}.goal`}
+                  rules={{ required: true }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        fullWidth
+                        label={"Goal $USDC"}
+                        type="number" {...field}
+                        error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
+                        helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
+                    );
+                  }}
+
+                />
+              </Grid>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <IconButton
+                  color="primary"
+                  aria-label="remove subaccount"
+                  onClick={
+                    () => {
+                      remove(field.index)
+                    }
+                  }
+                >
+                  <RemoveIcon />
+                </IconButton>
+              </Grid>
+            </>
+          )
+        })
       }
 
       {/* Create */}
@@ -154,7 +186,7 @@ export const CreatePortfolio = () => {
         <Button
           fullWidth
           variant="contained"
-          disabled={!isValid}
+          disabled={type == PortfolioType.Even ? false : !isValid  }
           onClick={
             handleSubmit(
               (portfolio, e) => {
@@ -162,7 +194,7 @@ export const CreatePortfolio = () => {
                 navigate("/portfolios")
               },
               (errors, e) => {
-                console.log(errors)
+                console.error(errors, e)
               })
           }
         >

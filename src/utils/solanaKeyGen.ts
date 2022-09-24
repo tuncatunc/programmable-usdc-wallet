@@ -7,7 +7,7 @@ export interface IDerivationPath {
   subaccountIndex: number
 }
 
-export const keypair = (mnemonic: string, derivationPath: IDerivationPath): Keypair =>
+export const generateKeypair = (mnemonic: string, derivationPath: IDerivationPath): Keypair =>
 {
   const seed = bip39.mnemonicToSeedSync(mnemonic, ""); // (mnemonic, password)
 

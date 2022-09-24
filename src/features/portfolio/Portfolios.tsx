@@ -15,8 +15,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 import { useSelector } from 'react-redux'
-import { IPortfolio } from './portfolioSlice';
+import { IPortfolio, PortfolioType } from './portfolioSlice';
 import { RootState } from '../../app/store'
+import { AccountJazzIcon } from './AccountJazzicon';
 
 function Row(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
@@ -59,10 +60,15 @@ function Row(props: { portfolio: IPortfolio }) {
                     <TableRow key={subaccount.index}>
                       <TableCell component="th" scope="row">
                         {/* TODO: Create account address from derivation path */}
-                        <Jazzicon diameter={40} seed={jsNumberForAddress("0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915")} />
+                        {/* <Jazzicon diameter={40} seed={jsNumberForAddress("0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915")} /> */}
+                        <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
 
                       </TableCell>
-                      <TableCell>{subaccount.goal}</TableCell>
+                      <TableCell>
+                        {
+                        portfolio.type != PortfolioType.Even ? subaccount.goal : "N/A"
+                        }
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

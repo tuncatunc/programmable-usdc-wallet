@@ -9,7 +9,6 @@ import {
 } from '@solana/wallet-adapter-material-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 
-import './App.css';
 import { AppRoutes } from "./routes"
 import { store } from "./app/store";
 

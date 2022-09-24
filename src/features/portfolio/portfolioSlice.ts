@@ -25,6 +25,7 @@ export const portfoliosSlice = createSlice({
   initialState,
   reducers: {
     createPortfolio: (state, action: PayloadAction<IPortfolio>) => {
+      action.payload.index = state.length
       state.push(action.payload)
     }
   }
