@@ -90,7 +90,6 @@ export const Password = () => {
           Continue
         </Button>
       </Grid>
-      <DevTool control={control} /> {/* set up the dev tool */}
 
     </Grid>
   )

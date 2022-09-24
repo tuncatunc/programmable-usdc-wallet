@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { IMnemonic, mnemonicSlice, setWord } from "./mnemonicSlice";
 import { mnemonicSchema } from "./MnemonicSchema"
-import { DevTool } from "@hookform/devtools";
 import { useNavigate } from "react-router-dom";
 
 
@@ -101,7 +100,6 @@ export const Mnemonic = () => {
           Set 12 Word Mnemonic
         </Button>
       </Grid>
-      <DevTool control={control} /> {/* set up the dev tool */}
 
     </Grid>
   )

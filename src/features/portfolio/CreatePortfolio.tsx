@@ -6,7 +6,6 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { createPortfolio, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
@@ -170,7 +169,6 @@ export const CreatePortfolio = () => {
           Create Accounts
         </Button>
       </Grid>
-      <DevTool control={control} /> {/* set up the dev tool */}
 
     </Grid>)
 }

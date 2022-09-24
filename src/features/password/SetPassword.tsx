@@ -1,4 +1,3 @@
-import { DevTool } from "@hookform/devtools"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
@@ -125,7 +124,6 @@ export const SetPassword = () => {
           Continue
         </Button>
       </Grid>
-      <DevTool control={control} /> {/* set up the dev tool */}
 
     </Grid>
   )
