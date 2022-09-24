@@ -2,6 +2,7 @@ import { DevTool } from "@hookform/devtools"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import CryptoJS from "crypto-js"
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
@@ -38,11 +39,12 @@ export const SetPassword = () => {
 
   const { publicKey } = useWallet();
 
-  function validatePasswordsMatch() {
+  function validatePasswordsMatch() : boolean{
     const { password1, password2 } = getValues()
     return password1 == password2
   }
 
+  const navigate = useNavigate()
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -101,7 +103,9 @@ export const SetPassword = () => {
                 // TODO: Sha & Encode the Mnemonic and store in the local storage
                 var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase");
                 if (publicKey) {
-                  localStorage.setItem(publicKey?.toBase58().toString(), encrypted.toString()); 
+                  // localStorage.setItem(publicKey?.toBase58().toString(), encrypted.toString()); 
+                  localStorage.setItem("usdcwallet", encrypted.toString()); 
+                  navigate("/portfolios")
                 }
               },
               (errors, e) => {

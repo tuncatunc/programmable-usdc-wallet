@@ -11,10 +11,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { createPortfolio, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
 import { portfolioSchema } from "./PortfolioSchema";
+import { useNavigate } from "react-router-dom";
 
 export const CreatePortfolio = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const {
     control,
@@ -158,6 +160,7 @@ export const CreatePortfolio = () => {
             handleSubmit(
               (portfolio, e) => {
                 dispatch(createPortfolio(portfolio))
+                navigate("/portfolios")
               },
               (errors, e) => {
                 console.log(errors)
