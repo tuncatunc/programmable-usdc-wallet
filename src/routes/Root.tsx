@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -10,6 +10,8 @@ import Container from '@mui/material/Container';
 import { WalletMultiButton } from '@solana/wallet-adapter-material-ui';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
 
 
 type Props = {}
@@ -18,15 +20,34 @@ export const Root = (props: Props) => {
   const [value, setValue] = useState(0)
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  const navigate = useNavigate()
+  const mnemonic = useSelector(
+    (state: RootState) => state.mnemonic
+  )
 
   useEffect(() => {
-    // TODO: If redux store has not wallet mnemonic, navigate to mnemonic page to create a new mnemonic
-    // TODO: If localstorate has encrypted mnemonic, navigate to enter password to restore the mnemonic
-    if (publicKey && localStorage.get(publicKey.toBase58().toString()))
-    {
-      // Return to enter password to restore MNEMONIC from local storage
+
+    // - mnemonic is already set
+    // navigate to "/portfolios"
+    if (mnemonic.words.length == 12) {
+      navigate("/portfolios")
     }
+
+    // - no wallet mnemonic, 
+    // navigate to mnemonic page to create a new mnemonic
+    if (!localStorage.getItem("usdcwallet")) {
+      navigate("/mnemonic")
+    }
+
+    // - localstorage has `usdcwallet`
+    // - no mnemonic
+    // navigate to `/password` to restore mnemonic
+    if (localStorage.getItem("usdcwallet") && mnemonic.words.length == 0) {
+      navigate("/password")
+    }
+
   }, [])
+
   if (!publicKey) {
     return (
       <WalletMultiButton color={'info'} variant="text" />

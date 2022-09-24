@@ -1,9 +1,10 @@
 import { DevTool } from "@hookform/devtools"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { Description } from "@mui/icons-material"
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
-
 import * as Yup from "yup"
+import CryptoJS from "crypto-js"
 
 interface IPassword {
   password: string
@@ -54,13 +55,22 @@ export const Password = () => {
           disabled={!isValid}
           onClick={
             handleSubmit(
-              (password, e) => {
-                //dispatch(createPortfolio(portfolio))
-                console.log(password)
+              ({password}, e) => {
+                // Decrypt the mnemonic and dispatch set word
+                const encrypted = localStorage.getItem("usdcwallet")
+                if (encrypted) {
+                  const decrypted = CryptoJS.AES.decrypt(encrypted, password)
+                  console.log(decrypted.toString(CryptoJS.enc.Utf8))
+                }
+                // var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase")
+                // var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase")
+                // console.log(decrypted.toString(CryptoJS.enc.Utf8));;
+                
               },
               (errors, e) => {
                 console.log(errors)
-              })
+              }
+            )
           }
         >
           Continue

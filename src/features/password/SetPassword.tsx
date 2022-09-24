@@ -8,6 +8,9 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 
 import * as Yup from "yup"
+import { useSelector } from "react-redux"
+import { RootState } from "../../app/store"
+import { wordlists } from "bip39"
 
 interface IPassword {
   password1: string,
@@ -39,12 +42,17 @@ export const SetPassword = () => {
 
   const { publicKey } = useWallet();
 
-  function validatePasswordsMatch() : boolean{
+  function validatePasswordsMatch(): boolean {
     const { password1, password2 } = getValues()
     return password1 == password2
   }
 
   const navigate = useNavigate()
+
+  const mnemonic = useSelector(
+    (state: RootState) => state.mnemonic
+  )
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -100,13 +108,14 @@ export const SetPassword = () => {
           onClick={
             handleSubmit(
               (passwords, e) => {
-                // TODO: Sha & Encode the Mnemonic and store in the local storage
-                var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase");
-                if (publicKey) {
-                  // localStorage.setItem(publicKey?.toBase58().toString(), encrypted.toString()); 
-                  localStorage.setItem("usdcwallet", encrypted.toString()); 
-                  navigate("/portfolios")
-                }
+                // Encrypt the mnemonic words
+                // var text = mnemonic.words.join(" ");
+                var text = mnemonic.words.map(w => w.word).join(" ")
+                var encrypted = CryptoJS.AES.encrypt(text, passwords.password1);
+                localStorage.setItem("usdcwallet", encrypted.toString());
+
+                var decrypted = CryptoJS.AES.decrypt(localStorage.getItem("usdcwallet"), passwords.password1);
+                console.log(decrypted.toString(CryptoJS.enc.Utf8))
               },
               (errors, e) => {
                 console.log(errors)
