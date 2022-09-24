@@ -1,10 +1,12 @@
 import { DevTool } from "@hookform/devtools"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Description } from "@mui/icons-material"
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
 import * as Yup from "yup"
 import CryptoJS from "crypto-js"
+import { setWord } from "../mnemonic/mnemonicSlice";
+import { useNavigate } from "react-router-dom"
 
 interface IPassword {
   password: string
@@ -20,6 +22,9 @@ export const Password = () => {
     reValidateMode: "onChange",
     resolver: yupResolver(Yup.object().shape({ password: Yup.string().required("required") }))
   })
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <Grid container>
@@ -60,11 +65,20 @@ export const Password = () => {
                 const encrypted = localStorage.getItem("usdcwallet")
                 if (encrypted) {
                   const decrypted = CryptoJS.AES.decrypt(encrypted, password)
-                  console.log(decrypted.toString(CryptoJS.enc.Utf8))
+                  const words = decrypted.toString(CryptoJS.enc.Utf8).split(" ")
+                  for (let index = 0; index < words.length; index++) {
+                    dispatch(
+                      setWord(
+                        {
+                          index: index,
+                          word: words[index]
+                        }
+                      )
+                    )
+                  }
+                  navigate("/portfolios")
+
                 }
-                // var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase")
-                // var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase")
-                // console.log(decrypted.toString(CryptoJS.enc.Utf8));;
                 
               },
               (errors, e) => {
