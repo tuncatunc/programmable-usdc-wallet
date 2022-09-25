@@ -112,9 +112,7 @@ export const SetPassword = () => {
                 var text = mnemonic.words.map(w => w.word).join(" ")
                 var encrypted = CryptoJS.AES.encrypt(text, passwords.password1);
                 localStorage.setItem("usdcwallet", encrypted.toString());
-
-                var decrypted = CryptoJS.AES.decrypt(localStorage.getItem("usdcwallet"), passwords.password1);
-                console.log(decrypted.toString(CryptoJS.enc.Utf8))
+                navigate("/portfolios")
               },
               (errors, e) => {
                 console.log(errors)

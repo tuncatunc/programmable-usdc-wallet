@@ -5,10 +5,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    esbuildOptions: { target: "es2020" }
+    esbuildOptions: { target: "es2020", supported: { bigint: true } }
   },
   define: {
-    'process.env': {}
+    'process.env': {},
+    global: "globalThis",
+
+  },
+  build: {
+    target: [ 'es2020' ],
+    rollupOptions: {
+      plugins: []
+    }
   },
   resolve: {
     alias: {

@@ -1,5 +1,5 @@
 import { Button, Tooltip } from '@mui/material';
-import Jdenticon from 'react-jdenticon';
+import { Hashicon } from "@emeraldpay/hashicon-react"
 import { useSelector } from "react-redux"
 import { RootState } from "../../app/store"
 import { generateKeypair } from "../../utils/solanaKeyGen"
@@ -27,7 +27,7 @@ export const AccountJazzIcon = (props: AccountJazzIconProps) => {
   return (
     <Tooltip title={publicKeyStr} arrow> 
       <Button>
-        <Jdenticon size={40} value={publicKeyStr} />
+        <Hashicon size={40} value={publicKeyStr} />
       </Button>
     </Tooltip>
   )

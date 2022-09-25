@@ -2,8 +2,7 @@ import { MenuItem, Typography, Grid, Button, Select, TextField } from "@mui/mate
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import Jdenticon from 'react-jdenticon';
-
+import { Hashicon } from "@emeraldpay/hashicon-react"
 import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -116,7 +115,7 @@ export const CreatePortfolio = () => {
             return <>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 {/* TODO: Create account address from derivation path */}
-                <Jdenticon size={40} seed={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+                <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="caption">{`Account #${index}`}</Typography>
@@ -142,7 +141,7 @@ export const CreatePortfolio = () => {
             <>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 {/* TODO: Create account address from derivation path */}
-                <Jdenticon size={40} seed={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+                <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
               <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
                 <Controller

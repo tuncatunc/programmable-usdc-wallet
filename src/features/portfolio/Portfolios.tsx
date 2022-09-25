@@ -12,12 +12,12 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 import { useSelector } from 'react-redux'
 import { IPortfolio, PortfolioType } from './portfolioSlice';
 import { RootState } from '../../app/store'
 import { AccountJazzIcon } from './AccountJazzicon';
+import { Button } from '@mui/material';
 
 function Row(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
@@ -40,6 +40,10 @@ function Row(props: { portfolio: IPortfolio }) {
         </TableCell>
         <TableCell align="right">{portfolio.type}</TableCell>
         <TableCell align="right">{portfolio.subaccounts.length}</TableCell>
+        <TableCell align="center">
+          <Button>Deposit</Button>
+        </TableCell>
+
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -98,6 +102,7 @@ export const Portfolios = () => {
               <TableCell>Portfolio Name</TableCell>
               <TableCell align="right">Type</TableCell>
               <TableCell align="right">#Subaccounts</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
