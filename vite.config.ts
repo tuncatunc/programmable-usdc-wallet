@@ -1,23 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill"
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    esbuildOptions: { 
-      target: "es2020", 
+    esbuildOptions: {
+      target: "es2020",
       supported: { bigint: true },
       // Node.js global to browser globalThis
       define: {
         global: 'globalThis'
-    },
-    // Enable esbuild polyfill plugins
-    plugins: [
+      },
+      // Enable esbuild polyfill plugins
+      plugins: [
         NodeGlobalsPolyfillPlugin({
-            buffer: true
+          buffer: true
         })
-    ]
+      ]
     }
   },
   define: {
@@ -33,7 +34,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      stream: 'stream-browserify',
+      process: "process/browser",
+      stream: "stream-browserify",
+      zlib: "browserify-zlib",
+      util: "util",
     },
   }
 })

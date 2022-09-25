@@ -7,11 +7,16 @@
     <title>Portfolio Wallet</title>
   </head>
   <script>
-    /**
-     * this is a hack for error: global is not defined
-     */
-    var global = global || window
-    </script>
+    window.global = window;
+  </script>
+  <script type="module">
+    import process from "process";
+    import EventEmitter from "events";
+    import {Buffer} from "buffer";
+    window.Buffer = Buffer;
+    window.process = process;
+    window.EventEmitter = EventEmitter;
+  </script>
     
   <body>
     <div id="root"></div>
