@@ -14,6 +14,6 @@ export const generateKeypair = (mnemonic: string, derivationPath: IDerivationPat
   const path = `m/44'/501'/${derivationPath.accountIndex}'/${derivationPath.subaccountIndex}'`;
   const keypair = Keypair.fromSeed(derivePath(path, seed.toString("hex")).key);
 
-  console.log(`${path} => ${keypair.publicKey.toBase58()}`);
+  // console.log(`${path} => ${keypair.publicKey.toBase58()}`);
   return keypair;
 }

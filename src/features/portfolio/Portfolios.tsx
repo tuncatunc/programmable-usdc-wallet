@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,16 +11,22 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
+import { TOKEN_PROGRAM_ID, createTransferInstruction } from "@solana/spl-token";
 
 import { useSelector } from 'react-redux'
 import { IPortfolio, PortfolioType } from './portfolioSlice';
 import { RootState } from '../../app/store'
 import { AccountJazzIcon } from './AccountJazzicon';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { DepositButton } from './DepositButton';
 
-function Row(props: { portfolio: IPortfolio }) {
+function PortfolioRow(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
   const [open, setOpen] = React.useState(false);
+
 
   return (
     <>
@@ -41,7 +46,7 @@ function Row(props: { portfolio: IPortfolio }) {
         <TableCell align="right">{portfolio.type}</TableCell>
         <TableCell align="right">{portfolio.subaccounts.length}</TableCell>
         <TableCell align="center">
-          <Button>Deposit</Button>
+          <DepositButton portfolioIdx={portfolio.index} />
         </TableCell>
 
       </TableRow>
@@ -63,14 +68,12 @@ function Row(props: { portfolio: IPortfolio }) {
                   {portfolio.subaccounts.map((subaccount) => (
                     <TableRow key={subaccount.index}>
                       <TableCell component="th" scope="row">
-                        {/* TODO: Create account address from derivation path */}
-                        {/* <Jazzicon diameter={40} seed={jsNumberForAddress("0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915")} /> */}
                         <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
 
                       </TableCell>
                       <TableCell>
                         {
-                        portfolio.type != PortfolioType.Even ? subaccount.goal : "N/A"
+                          portfolio.type != PortfolioType.Even ? subaccount.goal : "N/A"
                         }
                       </TableCell>
                     </TableRow>
@@ -107,7 +110,7 @@ export const Portfolios = () => {
           </TableHead>
           <TableBody>
             {portfolios.map((portfolio) => (
-              <Row key={portfolio.index} portfolio={portfolio} />
+              <PortfolioRow key={portfolio.index} portfolio={portfolio} />
             ))}
           </TableBody>
         </Table>
