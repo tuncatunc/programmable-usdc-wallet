@@ -10,7 +10,6 @@ import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress
 } from "@solana/spl-token";
-import { sendAndConfirmWithRetry } from '@strata-foundation/spl-utils'
 import { AccountBalance } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
@@ -38,7 +37,7 @@ export const DepositButton = (props: DepositButtonProps) => {
     const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
     const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
     const fromWallet = publicKey
-    const tx = new Transaction();
+    let tx = new Transaction();
 
 
     // For each subaccount create a transfer transaction
@@ -74,14 +73,14 @@ export const DepositButton = (props: DepositButtonProps) => {
           fromWallet,
           toWalletAta,
           fromWallet,
-          10, // TODO: calculate share
+          10,
           [],
-          TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID
         )
       )
     }
 
-    sendTransaction(tx, connection )
+    sendTransaction(tx, connection,  { maxRetries: 5 })
 
     // let blockhash = await (await connection.getLatestBlockhash('finalized')).blockhash;
     // tx.recentBlockhash = blockhash
