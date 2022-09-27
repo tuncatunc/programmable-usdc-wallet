@@ -53,7 +53,7 @@ export const DepositButton = (props: DepositButtonProps) => {
         const result = await connection.getTokenAccountBalance(toWalletAta);
         balance = result.value.uiAmount!
       } catch (error) {
-        console.error(error)
+        // console.error(error)
       }
 
       // Create associated token account
@@ -80,7 +80,14 @@ export const DepositButton = (props: DepositButtonProps) => {
       )
     }
 
-    sendTransaction(tx, connection,  { maxRetries: 5 })
+    sendTransaction(
+      tx, 
+      connection,  
+      { 
+        preflightCommitment: "processed", 
+        maxRetries: 5 
+      }
+    )
 
     // let blockhash = await (await connection.getLatestBlockhash('finalized')).blockhash;
     // tx.recentBlockhash = blockhash
