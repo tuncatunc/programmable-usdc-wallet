@@ -8,7 +8,8 @@ import {
   TOKEN_PROGRAM_ID,
   createTransferInstruction,
   createAssociatedTokenAccountInstruction,
-  getAssociatedTokenAddress
+  getAssociatedTokenAddress,
+  getOrCreateAssociatedTokenAccount
 } from "@solana/spl-token";
 import { AccountBalance } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ interface DepositButtonProps {
 
 export const DepositButton = (props: DepositButtonProps) => {
   const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey, signTransaction, sendTransaction } = useWallet();
   const portfolios = useSelector(
     (state: RootState) => state.portfolios
   )
@@ -38,7 +39,12 @@ export const DepositButton = (props: DepositButtonProps) => {
     const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
     const fromWallet = publicKey
     let tx = new Transaction();
+    const fromWalletAta = await getAssociatedTokenAddress(
+      usdcMint,
+      fromWallet
+    )
 
+    console.log(`${fromWallet.toBase58()} USDC ata is ${fromWalletAta.toBase58()}`)
 
     // For each subaccount create a transfer transaction
     for (let sai = 0; sai < porfolio.subaccounts.length; sai++) {
@@ -61,8 +67,8 @@ export const DepositButton = (props: DepositButtonProps) => {
         tx.add(
           createAssociatedTokenAccountInstruction(
             fromWallet,
-            usdcMint,
-            fromWallet,
+            toWalletAta,
+            toWallet.publicKey,
             usdcMint
           )
         )
@@ -70,7 +76,7 @@ export const DepositButton = (props: DepositButtonProps) => {
 
       tx.add(
         createTransferInstruction(
-          fromWallet,
+          fromWalletAta,
           toWalletAta,
           fromWallet,
           10,
