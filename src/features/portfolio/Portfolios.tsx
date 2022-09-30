@@ -22,6 +22,7 @@ import { RootState } from '../../app/store'
 import { AccountJazzIcon } from './AccountJazzicon';
 import { IconButton } from '@mui/material';
 import { DepositButton } from './DepositButton';
+import { AccountBalance } from './AccountBalance';
 
 function PortfolioRow(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
@@ -65,19 +66,21 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {portfolio.subaccounts.map((subaccount) => (
-                    <TableRow key={subaccount.index}>
-                      <TableCell component="th" scope="row">
-                        <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
-
-                      </TableCell>
-                      <TableCell>
-                        {
-                          portfolio.type != PortfolioType.Even ? subaccount.goal : "N/A"
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {
+                    portfolio.subaccounts.map((subaccount) => (
+                      <TableRow key={subaccount.index}>
+                        <TableCell component="th" scope="row">
+                          <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
+                        </TableCell>
+                        <TableCell>
+                          {
+                            portfolio.type != PortfolioType.Even &&
+                            <AccountBalance accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
+                          }
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
             </Box>

@@ -25,7 +25,13 @@ export const AccountJazzIcon = (props: AccountJazzIconProps) => {
   const publicKeyStr = publicKey.toBase58().toString()
 
   return (
-    <Tooltip title={publicKeyStr} arrow> 
+    <Tooltip title={publicKeyStr} arrow 
+      onClick={
+        () => {
+          navigator.clipboard.writeText(publicKeyStr)
+        }
+      }
+    > 
       <Button>
         <Hashicon size={40} value={publicKeyStr} />
       </Button>
