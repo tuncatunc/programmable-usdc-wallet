@@ -7,10 +7,8 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     mnemonic: mnemonicReducer
   },
-  // middleware: [
-  //   apiSlice.middleware,
-  // ],
-
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

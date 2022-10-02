@@ -9,7 +9,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getPortfolios: builder.query({
       query: (address: string) => `/portfolio/${address}`,
-      // providesTags: ["Portfolios"]
+      providesTags: ["Portfolios"]
     }),
     createPortfolio: builder.mutation({
       query: (portfolio: IPortfolio) => ({
@@ -17,7 +17,7 @@ export const apiSlice = createApi({
         method: "POST",
         body: portfolio
       }),
-      // invalidatesTags: ["Portfolios"]
+      invalidatesTags: ["Portfolios"]
     }),
   })
 })
