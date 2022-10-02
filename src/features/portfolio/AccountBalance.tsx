@@ -11,17 +11,18 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { RootState } from "../../app/store";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { PublicKey } from "@solana/web3.js";
+import { useGetPortfoliosQuery } from "../api/apiSlice";
+import { IPortfolio } from "./portfolioSlice";
 
 export interface AccountBalanceProps {
-  accountIndex: number;
-  subaccountIndex: number
+  subaccountIndex: number;
+  portfolio: IPortfolio
 }
+
 export const AccountBalance = (props: AccountBalanceProps) => {
-  const { accountIndex, subaccountIndex } = props
+  const { portfolio, subaccountIndex } = props
   const { connection } = useConnection()
-  const portfolios = useSelector(
-    (state: RootState) => state.portfolios
-  )
+
 
   const mnemonic = useSelector(
     (state: RootState) => state.mnemonic
@@ -33,7 +34,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
     const getTokenBalance = async () => {
       const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
-      const { publicKey } = generateKeypair(mnemonicStr, { accountIndex, subaccountIndex })
+      const { publicKey } = generateKeypair(mnemonicStr, { accountIndex: portfolio.index, subaccountIndex })
       const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
       
       const subaccountAta = await getAssociatedTokenAddress(
@@ -51,7 +52,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
   return (
     <Box>
-      {tokenBalance.toString()} / {portfolios[accountIndex].subaccounts[subaccountIndex].goal}
+      {tokenBalance.toString()} / {portfolio.subaccounts[subaccountIndex].goal}
     </Box>
   )
 }

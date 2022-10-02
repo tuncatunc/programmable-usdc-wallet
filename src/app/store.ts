@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import portfolioReducer from "../features/portfolio/portfolioSlice"
+import { apiSlice } from "../features/api/apiSlice"
 import mnemonicReducer from "../features/mnemonic/mnemonicSlice"
 
 export const store = configureStore({
   reducer: {
-    portfolios: portfolioReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
     mnemonic: mnemonicReducer
   },
 })

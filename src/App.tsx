@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { Provider } from 'react-redux';
+import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
@@ -38,7 +39,7 @@ function App() {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletDialogProvider>
-          <Provider store={store}>
+          <Provider store={store} >
             <StyledEngineProvider injectFirst>
               <AppRoutes />
             </StyledEngineProvider>

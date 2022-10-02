@@ -1,5 +1,3 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 export enum PortfolioType {
   Even = "Even",
   Rational = "Rational",
@@ -20,18 +18,3 @@ export type IPortfolio = {
 
 const initialState : IPortfolio[] = []
 
-export const portfoliosSlice = createSlice({
-  name: "portfolios",
-  initialState,
-  reducers: {
-    createPortfolio: (state, action: PayloadAction<IPortfolio>) => {
-      action.payload.index = state.length
-      state.push(action.payload)
-    }
-  }
-})
-
-// Action creators are generated for each case reducer function
-export const {createPortfolio} = portfoliosSlice.actions
-
-export default portfoliosSlice.reducer

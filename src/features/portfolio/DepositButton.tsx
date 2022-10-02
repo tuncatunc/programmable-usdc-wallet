@@ -15,26 +15,23 @@ import { AccountBalance } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { generateKeypair } from '../../utils/solanaKeyGen';
+import { IPortfolio } from "./portfolioSlice";
 
 interface DepositButtonProps {
-  portfolioIdx: number
+  portfolio: IPortfolio
 }
 
 export const DepositButton = (props: DepositButtonProps) => {
   const { connection } = useConnection();
   const { publicKey, signTransaction, sendTransaction } = useWallet();
-  const portfolios = useSelector(
-    (state: RootState) => state.portfolios
-  )
+
   const mnemonic = useSelector(
     (state: RootState) => state.mnemonic
   )
 
   const onClick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
-
-    const { portfolioIdx } = props
-    const porfolio = portfolios[portfolioIdx]
+    const portfolio = props.portfolio
     const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
     const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
     const fromWallet = publicKey
@@ -47,8 +44,8 @@ export const DepositButton = (props: DepositButtonProps) => {
     console.log(`${fromWallet.toBase58()} USDC ata is ${fromWalletAta.toBase58()}`)
 
     // For each subaccount create a transfer transaction
-    for (let sai = 0; sai < porfolio.subaccounts.length; sai++) {
-      const toWallet = generateKeypair(mnemonicStr, { accountIndex: portfolioIdx, subaccountIndex: sai })
+    for (let sai = 0; sai < portfolio.subaccounts.length; sai++) {
+      const toWallet = generateKeypair(mnemonicStr, { accountIndex: portfolio.index, subaccountIndex: sai })
       const toWalletAta = await getAssociatedTokenAddress(
         usdcMint,
         toWallet.publicKey

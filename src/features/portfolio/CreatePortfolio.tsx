@@ -7,7 +7,9 @@ import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { createPortfolio, PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
+import { PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
+import { useCreatePortfolioMutation } from '../api/apiSlice';
+
 import { portfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +17,7 @@ export const CreatePortfolio = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
+  const [createPortfolio, { isLoading: isUpdating }] = useCreatePortfolioMutation()
 
   const {
     control,
@@ -109,9 +112,8 @@ export const CreatePortfolio = () => {
 
       {
         fields.map((field, index) => {
-          
-          if (type == PortfolioType.Even)
-          {
+
+          if (type == PortfolioType.Even) {
             return <>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 {/* TODO: Create account address from derivation path */}
@@ -136,7 +138,7 @@ export const CreatePortfolio = () => {
 
             </>
           }
-          
+
           return (
             <>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -185,11 +187,11 @@ export const CreatePortfolio = () => {
         <Button
           fullWidth
           variant="contained"
-          disabled={type == PortfolioType.Even ? false : !isValid  }
+          disabled={type == PortfolioType.Even ? false : !isValid}
           onClick={
             handleSubmit(
               (portfolio, e) => {
-                dispatch(createPortfolio(portfolio))
+                createPortfolio(portfolio)
                 navigate("/portfolios")
               },
               (errors, e) => {

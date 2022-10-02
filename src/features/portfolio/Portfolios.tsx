@@ -11,23 +11,18 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID, createTransferInstruction } from "@solana/spl-token";
 
-import { useSelector } from 'react-redux'
 import { IPortfolio, PortfolioType } from './portfolioSlice';
-import { RootState } from '../../app/store'
 import { AccountJazzIcon } from './AccountJazzicon';
 import { IconButton } from '@mui/material';
 import { DepositButton } from './DepositButton';
 import { AccountBalance } from './AccountBalance';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useGetPortfoliosQuery } from '../api/apiSlice';
 
 function PortfolioRow(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
   const [open, setOpen] = React.useState(false);
-
 
   return (
     <>
@@ -47,7 +42,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
         <TableCell align="right">{portfolio.type}</TableCell>
         <TableCell align="right">{portfolio.subaccounts.length}</TableCell>
         <TableCell align="center">
-          <DepositButton portfolioIdx={portfolio.index} />
+          <DepositButton portfolio={portfolio} />
         </TableCell>
 
       </TableRow>
@@ -75,7 +70,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                         <TableCell>
                           {
                             portfolio.type != PortfolioType.Even &&
-                            <AccountBalance accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
+                            <AccountBalance portfolio={portfolio} subaccountIndex={subaccount.index} />
                           }
                         </TableCell>
                       </TableRow>
@@ -92,9 +87,21 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
 }
 
 export const Portfolios = () => {
-  const portfolios = useSelector(
-    (state: RootState) => state.portfolios
-  )
+
+  const { publicKey } = useWallet()
+
+  const {
+    data: portfolios,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetPortfoliosQuery(publicKey!.toBase58().toString())
+
+  if (isLoading || isError)
+  {
+    return <Box>Loading...</Box>
+  }
   return (
     <>
       <Typography variant='h1'>
@@ -112,9 +119,11 @@ export const Portfolios = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {portfolios.map((portfolio) => (
-              <PortfolioRow key={portfolio.index} portfolio={portfolio} />
-            ))}
+            {
+              portfolios.data.map((portfolio) => (
+                <PortfolioRow key={portfolio.index} portfolio={portfolio} />
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>
