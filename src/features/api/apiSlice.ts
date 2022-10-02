@@ -27,12 +27,14 @@ export const apiSlice = createApi({
         url: `/portfolio`,
         method: "PUT",
         body: portfolio
-      })
+      }),
+      invalidatesTags: ["Portfolios"]
     })
   })
 })
 
 export const {
   useGetPortfoliosQuery,
-  useCreatePortfolioMutation
+  useCreatePortfolioMutation,
+  useUpdatePortfolioMutation
 } = apiSlice

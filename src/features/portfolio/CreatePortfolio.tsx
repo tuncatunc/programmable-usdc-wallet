@@ -8,7 +8,7 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { PortfolioType, IPortfolio, Subaccount } from "./portfolio"
-import { useCreatePortfolioMutation, useGetPortfoliosQuery } from '../api/apiSlice';
+import { useCreatePortfolioMutation, useGetPortfoliosQuery, useUpdatePortfolioMutation } from '../api/apiSlice';
 
 import { portfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,9 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
   const navigate = useNavigate()
   const { publicKey } = useWallet();
-  const [createPortfolio, { isLoading: isUpdating }] = useCreatePortfolioMutation()
+  const [createPortfolio, { isLoading: isCreating }] = useCreatePortfolioMutation()
+  const [updatePortfolio, {isLoading: isUpdating}] = useUpdatePortfolioMutation()
+
   const {
     data: portfolios,
     isLoading,
@@ -267,7 +269,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
             handleSubmit(
               (portfolio, e) => {
                 if (props?.isEdit) {
-                  // TODO: call update mutation
+                  updatePortfolio(portfolio)
                 }
                 else { // Create
                   portfolio.address = publicKey!.toBase58()
