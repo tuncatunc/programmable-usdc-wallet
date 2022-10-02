@@ -9,7 +9,11 @@ export const portfolioSchema =  Yup.object().shape({
         goal: Yup.number()
           .min(10, "min amount is $10")
           .required("Goal is required")
-          .transform(ensureNumber)
+          .transform(ensureNumber),
+        name: Yup.string()
+          .required("Name is required")
+          .default("Account name")
       })
-    ).min(1)
+    ).min(1),
+  name: Yup.string().required("Portfolio name is required")
 });

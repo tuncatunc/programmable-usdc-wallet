@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import { IPortfolio, PortfolioType } from './portfolioSlice';
+import { IPortfolio, PortfolioType } from './portfolio';
 import { AccountJazzIcon } from './AccountJazzicon';
 import { IconButton } from '@mui/material';
 import { DepositButton } from './DepositButton';
@@ -58,6 +58,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                   <TableRow>
                     <TableCell></TableCell>
                     <TableCell>Goal $USDC</TableCell>
+                    <TableCell>Name</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -72,6 +73,9 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                             portfolio.type != PortfolioType.Even &&
                             <AccountBalance portfolio={portfolio} accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
                           }
+                        </TableCell>
+                        <TableCell>
+                          {subaccount.name}
                         </TableCell>
                       </TableRow>
                     ))

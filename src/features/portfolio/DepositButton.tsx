@@ -15,7 +15,7 @@ import { AccountBalance } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { generateKeypair } from '../../utils/solanaKeyGen';
-import { IPortfolio } from "./portfolioSlice";
+import { IPortfolio } from "./portfolio";
 
 interface DepositButtonProps {
   portfolio: IPortfolio

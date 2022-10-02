@@ -7,17 +7,26 @@ import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { PortfolioType, IPortfolio, Subaccount } from "./portfolioSlice"
-import { useCreatePortfolioMutation } from '../api/apiSlice';
+import { PortfolioType, IPortfolio, Subaccount } from "./portfolio"
+import { useCreatePortfolioMutation, useGetPortfoliosQuery } from '../api/apiSlice';
 
 import { portfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export const CreatePortfolio = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
+  const { publicKey } = useWallet();
   const [createPortfolio, { isLoading: isUpdating }] = useCreatePortfolioMutation()
+  const {
+    data: portfolios,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetPortfoliosQuery(publicKey!.toBase58().toString())
 
   const {
     control,
@@ -100,7 +109,8 @@ export const CreatePortfolio = () => {
               const ni = getValues().subaccounts.length
               let sa: Subaccount = {
                 goal: 10,
-                index: ni
+                index: ni,
+                name: `Account #${ni + 1}`
               }
               append(sa);
             }
@@ -119,9 +129,29 @@ export const CreatePortfolio = () => {
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant="caption">{`Account #${index}`}</Typography>
+              <Grid item xs={4}>
+                <Typography variant="caption">{`Account #${index + 1}`}</Typography>
               </Grid>
+              <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                <Controller
+                  key={field.id}
+                  {...{ control, index, field }}
+                  name={`subaccounts.${index}.name`}
+                  rules={{ required: true }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        fullWidth
+                        label={"Name"}
+                        type="text" {...field}
+                        error={errors?.subaccounts && errors.subaccounts[index]?.name?.message != undefined}
+                        helperText={errors?.subaccounts && errors.subaccounts[index]?.name?.message} />
+                    );
+                  }}
+
+                />
+              </Grid>
+
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <IconButton
                   color="primary"
@@ -145,7 +175,7 @@ export const CreatePortfolio = () => {
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
-              <Grid item xs={8} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+              <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
                 <Controller
                   key={field.id}
                   {...{ control, index, field }}
@@ -159,6 +189,25 @@ export const CreatePortfolio = () => {
                         type="number" {...field}
                         error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
                         helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
+                    );
+                  }}
+
+                />
+              </Grid>
+              <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                <Controller
+                  key={field.id}
+                  {...{ control, index, field }}
+                  name={`subaccounts.${index}.name`}
+                  rules={{ required: true }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        fullWidth
+                        label={"Name"}
+                        type="text" {...field}
+                        error={errors?.subaccounts && errors.subaccounts[index]?.name?.message != undefined}
+                        helperText={errors?.subaccounts && errors.subaccounts[index]?.name?.message} />
                     );
                   }}
 
@@ -187,10 +236,12 @@ export const CreatePortfolio = () => {
         <Button
           fullWidth
           variant="contained"
-          disabled={type == PortfolioType.Even ? false : !isValid}
+          disabled={!isValid}
           onClick={
             handleSubmit(
               (portfolio, e) => {
+                portfolio.address = publicKey!.toBase58()
+                portfolio.index = portfolios.data.length;
                 createPortfolio(portfolio)
                 navigate("/portfolios")
               },
@@ -199,7 +250,7 @@ export const CreatePortfolio = () => {
               })
           }
         >
-          Create Accounts
+          Create Portfolio
         </Button>
       </Grid>
 

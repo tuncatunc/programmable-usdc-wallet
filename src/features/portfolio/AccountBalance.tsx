@@ -12,7 +12,7 @@ import { RootState } from "../../app/store";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { PublicKey } from "@solana/web3.js";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
-import { IPortfolio } from "./portfolioSlice";
+import { IPortfolio } from "./portfolio";
 
 export interface AccountBalanceProps {
   portfolio: IPortfolio;
