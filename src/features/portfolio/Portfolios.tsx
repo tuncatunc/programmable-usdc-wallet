@@ -70,7 +70,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                         <TableCell>
                           {
                             portfolio.type != PortfolioType.Even &&
-                            <AccountBalance portfolio={portfolio} subaccountIndex={subaccount.index} />
+                            <AccountBalance portfolio={portfolio} accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
                           }
                         </TableCell>
                       </TableRow>

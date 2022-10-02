@@ -5,16 +5,13 @@ import { RootState } from "../../app/store"
 import { generateKeypair } from "../../utils/solanaKeyGen"
 
 export interface AccountJazzIconProps {
-  accountIndex: number;
+  accountIndex: number,
   subaccountIndex: number
 }
 
 export const AccountJazzIcon = (props: AccountJazzIconProps) => {
 
   const { accountIndex, subaccountIndex } = props
-  const portfolios = useSelector(
-    (state: RootState) => state.portfolios
-  )
 
   const mnemonic = useSelector(
     (state: RootState) => state.mnemonic
