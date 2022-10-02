@@ -38,7 +38,8 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
     formState: { isValid, errors },
     getValues,
     setValue,
-    handleSubmit
+    handleSubmit,
+    reset
   } = useForm<IPortfolio>(
     {
       mode: "onChange",
@@ -50,10 +51,18 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
   useEffect(() => {
 
     if (props?.isEdit) {
+      reset();
       const portfolio: IPortfolio = portfolios[props.ai]
       // Set the values from portfolio
       setValue("type", portfolio.type)
       setValue("name", portfolio.name)
+      for (let sai = 0; sai < portfolio.subaccounts.length; sai++) {
+        const sa = portfolio.subaccounts[sai];
+        append(sa)
+        setValue(`subaccounts.${sai}.index`, sa.index)
+        setValue(`subaccounts.${sai}.goal`, sa.goal)
+        setValue(`subaccounts.${sai}.name`, sa.name)
+      }
       setValue("subaccounts", portfolio.subaccounts)
     }
   }, [portfolios])
@@ -69,7 +78,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h1" marginBottom={3}>Create Portfolio</ Typography>
+        <Typography variant="h1" marginBottom={3}>{props?.isEdit ? "Update" : "Create "}  Portfolio</ Typography>
       </Grid>
 
       {/* Portfolio Name */}
@@ -257,9 +266,15 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
           onClick={
             handleSubmit(
               (portfolio, e) => {
-                portfolio.address = publicKey!.toBase58()
-                portfolio.index = portfolios.data.length;
-                createPortfolio(portfolio)
+                if (props?.isEdit) {
+                  // TODO: call update mutation
+                }
+                else { // Create
+                  portfolio.address = publicKey!.toBase58()
+                  portfolio.index = portfolios.length;
+                  createPortfolio(portfolio)
+
+                }
                 navigate("/portfolios")
               },
               (errors, e) => {
@@ -267,7 +282,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
               })
           }
         >
-          Create Portfolio
+          {props?.isEdit ? "Update" : "Create "} Portfolio
         </Button>
       </Grid>
 

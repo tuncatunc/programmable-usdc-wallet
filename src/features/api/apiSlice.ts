@@ -22,6 +22,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Portfolios"]
     }),
+    updatePortfolio: builder.mutation({
+      query: (portfolio: IPortfolio) => ({
+        url: `/portfolio`,
+        method: "PUT",
+        body: portfolio
+      })
+    })
   })
 })
 
