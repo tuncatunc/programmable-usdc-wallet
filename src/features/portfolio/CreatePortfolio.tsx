@@ -13,10 +13,15 @@ import { useCreatePortfolioMutation, useGetPortfoliosQuery } from '../api/apiSli
 import { portfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect } from "react";
 
-export const CreatePortfolio = () => {
+interface CreatePortfolioProps {
+  isEdit: boolean; // In edit mode
+  ai: number // Account index
+}
 
-  const dispatch = useDispatch();
+export const CreatePortfolio = (props?: CreatePortfolioProps) => {
+
   const navigate = useNavigate()
   const { publicKey } = useWallet();
   const [createPortfolio, { isLoading: isUpdating }] = useCreatePortfolioMutation()
@@ -32,14 +37,26 @@ export const CreatePortfolio = () => {
     control,
     formState: { isValid, errors },
     getValues,
+    setValue,
     handleSubmit
   } = useForm<IPortfolio>(
     {
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: yupResolver(portfolioSchema)
+      resolver: yupResolver(portfolioSchema),
     }
   );
+
+  useEffect(() => {
+
+    if (props?.isEdit) {
+      const portfolio: IPortfolio = portfolios[props.ai]
+      // Set the values from portfolio
+      setValue("type", portfolio.type)
+      setValue("name", portfolio.name)
+      setValue("subaccounts", portfolio.subaccounts)
+    }
+  }, [portfolios])
 
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)

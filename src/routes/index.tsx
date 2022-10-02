@@ -14,6 +14,8 @@ import { SetPassword } from "./SetPassword"
 import { Password } from "./Password";
 import { Error } from "./Error";
 import { CreatePortfolio } from "./CreatePortfolio";
+import { EditPortfolio } from "./EditPortfolio";
+
 import { Portfolios } from "./Portfolios";
 import { Mnemonic } from "./Mnemonic";
 
@@ -46,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "create-portfolio",
         element: <CreatePortfolio />
+      },
+      {
+        path: "edit-portfolio/:ai",
+        element: <EditPortfolio />
       },
       {
         path: "portfolios",

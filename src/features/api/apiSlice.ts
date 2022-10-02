@@ -9,6 +9,9 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getPortfolios: builder.query({
       query: (address: string) => `/portfolio/${address}`,
+      transformResponse: (response: any, meta, arg) => {
+        return response.data;
+      },
       providesTags: ["Portfolios"]
     }),
     createPortfolio: builder.mutation({

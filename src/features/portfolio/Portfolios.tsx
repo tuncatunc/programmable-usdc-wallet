@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { IPortfolio, PortfolioType } from './portfolio';
 import { AccountJazzIcon } from './AccountJazzicon';
@@ -19,6 +20,7 @@ import { DepositButton } from './DepositButton';
 import { AccountBalance } from './AccountBalance';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useGetPortfoliosQuery } from '../api/apiSlice';
+import { Link } from 'react-router-dom';
 
 function PortfolioRow(props: { portfolio: IPortfolio }) {
   const { portfolio } = props;
@@ -37,6 +39,9 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
+          <Link to={`/edit-portfolio/${portfolio.index}`}  >
+            <EditIcon color='action' />
+          </Link>
           {portfolio.name}
         </TableCell>
         <TableCell align="right">{portfolio.type}</TableCell>
@@ -102,8 +107,7 @@ export const Portfolios = () => {
     error
   } = useGetPortfoliosQuery(publicKey!.toBase58().toString())
 
-  if (isLoading || isError)
-  {
+  if (isLoading || isError) {
     return <Box>Loading...</Box>
   }
   return (
@@ -124,7 +128,7 @@ export const Portfolios = () => {
           </TableHead>
           <TableBody>
             {
-              portfolios.data.map((portfolio) => (
+              portfolios.map((portfolio) => (
                 <PortfolioRow key={portfolio.index} portfolio={portfolio} />
               ))
             }
