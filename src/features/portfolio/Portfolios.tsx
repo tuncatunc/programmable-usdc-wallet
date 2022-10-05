@@ -12,11 +12,11 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
+import { AccountBalance as BankIcon } from '@mui/icons-material';
 
 import { IPortfolio, PortfolioType } from './portfolio';
 import { AccountJazzIcon } from './AccountJazzicon';
 import { IconButton } from '@mui/material';
-import { DepositButton } from './DepositButton';
 import { AccountBalance } from './AccountBalance';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useGetPortfoliosQuery } from '../api/apiSlice';
@@ -47,7 +47,14 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
         <TableCell align="right">{portfolio.type}</TableCell>
         <TableCell align="right">{portfolio.subaccounts.length}</TableCell>
         <TableCell align="center">
-          <DepositButton portfolio={portfolio} />
+          <Link to={`/deposit/${portfolio.index}`}>
+            <IconButton >
+              <BankIcon color='primary' />
+              Fund the Portfolio
+            </IconButton>
+
+          </Link>
+
         </TableCell>
 
       </TableRow>

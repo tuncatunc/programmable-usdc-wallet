@@ -1,5 +1,5 @@
 import { Connection } from "@solana/web3.js"
-import { IPortfolio } from "../portfolio"
+import { IPortfolio } from "../../portfolio/portfolio"
 
 // Rationally Distributed Example
 // User deposits $100,000 into wallet

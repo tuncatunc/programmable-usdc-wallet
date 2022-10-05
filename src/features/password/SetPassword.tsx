@@ -108,7 +108,6 @@ export const SetPassword = () => {
             handleSubmit(
               (passwords, e) => {
                 // Encrypt the mnemonic words
-                // var text = mnemonic.words.join(" ");
                 var text = mnemonic.words.map(w => w.word).join(" ")
                 var encrypted = CryptoJS.AES.encrypt(text, passwords.password1);
                 localStorage.setItem("usdcwallet", encrypted.toString());

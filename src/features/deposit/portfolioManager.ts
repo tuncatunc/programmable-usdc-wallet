@@ -3,7 +3,7 @@ import { createAssociatedTokenAccount, createAssociatedTokenAccountInstruction, 
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { calculateShareEven } from "./share/calculateShareEven";
-import { IPortfolio, PortfolioType } from "./portfolio";
+import { IPortfolio, PortfolioType } from "../portfolio/portfolio";
 import { calculateShare } from "./share";
 
 

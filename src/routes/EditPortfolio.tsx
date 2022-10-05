@@ -10,7 +10,7 @@ export const EditPortfolio = (props: Props) => {
   const mnemonic = useSelector(
     (state: RootState) => state.mnemonic
   )
-  let { ai } = useParams()
+  let { accountIndex } = useParams()
 
   useEffect(() => {
 
@@ -31,7 +31,7 @@ export const EditPortfolio = (props: Props) => {
 
   return (
     <div>
-      <CP ai={Number(ai)} isEdit={true} />
+      <CP ai={Number(accountIndex)} isEdit={true} />
     </div>
   )
 }

@@ -18,6 +18,7 @@ import { EditPortfolio } from "./EditPortfolio";
 
 import { Portfolios } from "./Portfolios";
 import { Mnemonic } from "./Mnemonic";
+import { PorfolioDeposit } from "./PortfolioDeposit";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
         element: <CreatePortfolio />
       },
       {
-        path: "edit-portfolio/:ai",
+        path: "edit-portfolio/:accountIndex",
         element: <EditPortfolio />
       },
       {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "mnemonic",
         element: <Mnemonic />
+      },
+      {
+        path: "deposit/:accountIndex",
+        element: <PorfolioDeposit />
       }
     ]
   }

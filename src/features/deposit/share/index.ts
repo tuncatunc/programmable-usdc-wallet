@@ -1,5 +1,5 @@
 import { Connection } from "@solana/web3.js";
-import { IPortfolio, PortfolioType } from "../portfolio";
+import { IPortfolio, PortfolioType } from "../../portfolio/portfolio";
 import { calculateShareEven } from "./calculateShareEven";
 import { calculateShareRational } from "./calculateShareRational";
 import { calculateShareRationalPriority } from "./calculateShareRationalPriority";
@@ -7,7 +7,8 @@ import { calculateShareRationalPriority } from "./calculateShareRationalPriority
 export const calculateShare = (
   portfolio: IPortfolio,
   amount: number,
-  connection: Connection
+  connection: Connection,
+  mnemonic: string
 ): number[] => {
   switch (portfolio.type) {
     case PortfolioType.Even:
@@ -19,11 +20,12 @@ export const calculateShare = (
       break;
 
     case PortfolioType.RationalPriority:
-      return calculateShareRationalPriority(portfolio, amount, connection)
+      return calculateShareRationalPriority(portfolio, amount, connection, mnemonic)
       break;
 
     default:
       return []
       break;
   }
+  return []
 }
