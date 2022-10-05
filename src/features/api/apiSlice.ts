@@ -11,6 +11,7 @@ export const apiSlice = createApi({
     getPortfolios: builder.query({
       query: (address: string) => `/portfolio/${address}`,
       transformResponse: (response: any, meta, arg) => {
+        // _id fields are for the mongodb, strip them away 
         // delete _id fields
         return response.data.map(p => {
           delete p._id
