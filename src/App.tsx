@@ -4,7 +4,7 @@ import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, BraveWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
   WalletDialogProvider
 } from '@solana/wallet-adapter-material-ui';
@@ -31,6 +31,7 @@ function App() {
        * your users connect to will be loaded.
        */
       new PhantomWalletAdapter(),
+      new BraveWalletAdapter()
     ],
     []
   );
