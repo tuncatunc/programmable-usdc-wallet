@@ -4,23 +4,21 @@ import { calculateShareEven } from "./calculateShareEven";
 import { calculateShareRational } from "./calculateShareRational";
 import { calculateShareRationalPriority } from "./calculateShareRationalPriority";
 
-export const calculateShare = (
+export const calculateShare = async (
   portfolio: IPortfolio,
   amount: number,
   connection: Connection,
   mnemonic: string
-): number[] => {
+): Promise<number[]> => {
   switch (portfolio.type) {
     case PortfolioType.Even:
-      return calculateShareEven(portfolio, amount)
-      break;
+      return Promise.resolve(calculateShareEven(portfolio, amount))
 
     case PortfolioType.Rational:
-      return calculateShareRational(portfolio, amount, connection)
-      break;
+      return Promise.resolve(calculateShareRational(portfolio, amount, connection))
 
     case PortfolioType.RationalPriority:
-      return calculateShareRationalPriority(portfolio, amount, connection, mnemonic)
+      return await calculateShareRationalPriority(portfolio, amount, connection, mnemonic)
       break;
 
     default:

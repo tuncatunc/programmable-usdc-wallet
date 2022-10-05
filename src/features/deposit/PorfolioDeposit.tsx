@@ -109,10 +109,10 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                 fullWidth
                 label={"Amount"}
                 {...field}
-                onChange={(e) => {
+                onChange={async (e) => {
                   field.onChange(e)
                   var mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
-                  const s = calculateShare(portfolio, getValues().amount, connection, mnemonicStr)
+                  const s = await calculateShare(portfolio, getValues().amount, connection, mnemonicStr)
                   setShares(s)
                 }}
                 error={errors?.amount?.message != undefined}

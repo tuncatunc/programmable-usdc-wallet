@@ -30,7 +30,7 @@ export const CreatePortfolio = (props: Props) => {
 
   return (
     <div>
-      <CP />
+      <CP ai={Number(null)} isEdit={false}/>
     </div>
   )
 }

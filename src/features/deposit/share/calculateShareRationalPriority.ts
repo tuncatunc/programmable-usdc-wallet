@@ -12,7 +12,7 @@ import { IPortfolio } from "../../portfolio/portfolio"
 // Account Goal: $10,000. Deposit: $0 / 0% of deposit
 // If all accounts reach % during a deposit, a new spill-over account will be created within the subaccount portfolio. In this case, Account 5, having no goal determined yet. Funds can be transferred back to main account to be distributed later.
 
-export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): number[] => {
+export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): Promise<number[]> => {
   const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
 
   const currentSaBalances = portfolio.subaccounts.map(async sa => {
