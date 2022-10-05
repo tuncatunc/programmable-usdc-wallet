@@ -6,10 +6,20 @@ export const apiSlice = createApi({
   reducerPath: "api",
   tagTypes: ["Portfolios"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://portfolio-usdc-wallet-be-tunca.vercel.app/api" }),
+  // baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api" }),
   endpoints: (builder) => ({
     getPortfolios: builder.query({
       query: (address: string) => `/portfolio/${address}`,
       transformResponse: (response: any, meta, arg) => {
+        // delete _id fields
+        return response.data.map(p => {
+          delete p._id
+          p.subaccounts = p.subaccounts.map(sa => {
+            delete sa._id
+            return sa
+          })
+          return p
+        })
         return response.data;
       },
       providesTags: ["Portfolios"]

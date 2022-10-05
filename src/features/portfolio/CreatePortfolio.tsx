@@ -269,6 +269,8 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
             handleSubmit(
               (portfolio, e) => {
                 if (props?.isEdit) {
+                  portfolio.address = publicKey!.toBase58()
+                  portfolio.index = props.ai; // Account index
                   updatePortfolio(portfolio)
                 }
                 else { // Create
