@@ -3,7 +3,7 @@ import { AccountBalance } from "@mui/icons-material"
 import { Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
-import { PublicKey } from "@solana/web3.js"
+import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js"
 import { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
@@ -13,6 +13,7 @@ import { generateKeypair } from "../../utils/solanaKeyGen"
 import { useGetPortfoliosQuery } from "../api/apiSlice"
 import { AccountJazzIcon } from "../portfolio/AccountJazzicon"
 import { IPortfolio, PortfolioType } from "../portfolio/portfolio"
+import { depositToPortfolio } from "./portfolioManager"
 import { calculateShare } from "./share"
 
 
@@ -29,7 +30,7 @@ type PortfolioDepositProps = {
 //
 export const PorfolioDeposit = (props: PortfolioDepositProps) => {
   const { ai } = props
-  const { publicKey } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection()
   const {
     data: portfolios,
@@ -166,8 +167,18 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
           disabled={!isValid}
           onClick={
             handleSubmit(
-              (data, e) => {
+              async (data, e) => {
                 console.log(`Deposit ${data.amount} into portfolio`)
+                var mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
+                const tx = await depositToPortfolio(connection, publicKey!, portfolio, mnemonicStr, shares)
+                sendTransaction(
+                  tx,
+                  connection,  
+                  { 
+                    preflightCommitment: "processed", 
+                    maxRetries: 5 
+                  }
+                )
               },
               (errors, e) => {
                 console.error(errors, e)

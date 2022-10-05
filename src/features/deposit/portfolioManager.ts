@@ -13,7 +13,7 @@ export const depositToPortfolio = async (
   wallet: PublicKey,
   portfolio: IPortfolio,
   mnemonic: string,
-  amount: number): Promise<Transaction> => {
+  shares: number[]): Promise<Transaction> => {
   const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
   let tx = new Transaction();
   const walletAta = await getAssociatedTokenAddress(
@@ -21,26 +21,28 @@ export const depositToPortfolio = async (
     wallet
   )
 
-  const shares = calculateShare(portfolio, amount, connection)
-  portfolio.subaccounts.forEach(async (sa, sai) => {
+  for (let sai = 0; sai < portfolio.subaccounts.length; sai++) {
+    const sa = portfolio.subaccounts[sai];
     const saWallet = generateKeypair(mnemonic, { accountIndex: portfolio.index, subaccountIndex: sa.index })
     const saWalletAta = await getAssociatedTokenAddress(
       usdcMint,
       saWallet.publicKey
     )
-
+  
     //
     // If subaccaunt `saWallet` has no balance,
     // add create ATA instruction
     //
-    let saBalance: number = 0;
+    let saBalance: BigInt = BigInt(0);
+    let decimals: number = 0
     try {
       const result = await connection.getTokenAccountBalance(saWalletAta)
-      saBalance = result.value.uiAmount!
+      saBalance = BigInt(result.value.amount!) // subaccount balance
+      decimals = result.value.decimals
     } catch (error) {
-
+  
     }
-
+  
     if (!saBalance) {
       tx.add(
         createAssociatedTokenAccountInstruction(
@@ -51,7 +53,7 @@ export const depositToPortfolio = async (
         )
       )
     }
-
+  
     //
     // Transfer share instruction
     //
@@ -60,12 +62,12 @@ export const depositToPortfolio = async (
         walletAta,
         saWalletAta,
         wallet,
-        shares[sai], // Share for the subaccount 
+        BigInt(shares[sai]) * BigInt(decimals), // Share for the subaccount 
         [],
         TOKEN_PROGRAM_ID
       )
     )
-  })
+  }
 
   return tx;
 }
