@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { generateKeypair } from '../../utils/solanaKeyGen';
 import { IPortfolio } from "./portfolio";
+import { depositToPortfolio } from "./portfolioManager";
 
 interface DepositButtonProps {
   portfolio: IPortfolio
@@ -31,57 +32,18 @@ export const DepositButton = (props: DepositButtonProps) => {
 
   const onClick = useCallback(async () => {
     if (!publicKey) throw new WalletNotConnectedError();
-    const portfolio = props.portfolio
     const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
-    const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
-    const fromWallet = publicKey
-    let tx = new Transaction();
-    const fromWalletAta = await getAssociatedTokenAddress(
-      usdcMint,
-      fromWallet
+    const portfolio = props.portfolio
+    const amount = 1000; // TODO: Get it from UI
+
+    const tx = await depositToPortfolio(
+      connection,
+      publicKey,
+      portfolio,
+      mnemonicStr,
+      amount
     )
 
-    console.log(`${fromWallet.toBase58()} USDC ata is ${fromWalletAta.toBase58()}`)
-
-    // For each subaccount create a transfer transaction
-    for (let sai = 0; sai < portfolio.subaccounts.length; sai++) {
-      const toWallet = generateKeypair(mnemonicStr, { accountIndex: portfolio.index, subaccountIndex: sai })
-      const toWalletAta = await getAssociatedTokenAddress(
-        usdcMint,
-        toWallet.publicKey
-      )
-
-      let balance: number = 0
-      try {
-        const result = await connection.getTokenAccountBalance(toWalletAta);
-        balance = result.value.uiAmount!
-      } catch (error) {
-        // console.error(error)
-      }
-
-      // Create associated token account
-      if (!balance) { // 
-        tx.add(
-          createAssociatedTokenAccountInstruction(
-            fromWallet,
-            toWalletAta,
-            toWallet.publicKey,
-            usdcMint
-          )
-        )
-      }
-
-      tx.add(
-        createTransferInstruction(
-          fromWalletAta,
-          toWalletAta,
-          fromWallet,
-          10,
-          [],
-          TOKEN_PROGRAM_ID
-        )
-      )
-    }
 
     sendTransaction(
       tx, 

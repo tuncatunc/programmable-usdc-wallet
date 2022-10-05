@@ -8,12 +8,12 @@ import { calculateShare } from "./share";
 
 
 // Creates transactions 
-export const depositToEvenPortfolio = async (
+export const depositToPortfolio = async (
   connection: Connection,
   wallet: PublicKey,
   portfolio: IPortfolio,
   mnemonic: string,
-  amount: number) => {
+  amount: number): Promise<Transaction> => {
   const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
   let tx = new Transaction();
   const walletAta = await getAssociatedTokenAddress(
