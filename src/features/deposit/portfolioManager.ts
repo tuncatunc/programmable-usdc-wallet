@@ -34,16 +34,17 @@ export const depositToPortfolio = async (
     // add create ATA instruction
     //
     let saBalance: BigInt = BigInt(0);
-    let decimals: number = 0
+    let saAtaExists = false;
+    let decimals: number = 6
     try {
       const result = await connection.getTokenAccountBalance(saWalletAta)
+      saAtaExists = true;
       saBalance = BigInt(result.value.amount!) // subaccount balance
-      decimals = result.value.decimals
     } catch (error) {
   
     }
   
-    if (!saBalance) {
+    if (!saAtaExists) {
       tx.add(
         createAssociatedTokenAccountInstruction(
           wallet,
@@ -62,9 +63,8 @@ export const depositToPortfolio = async (
         walletAta,
         saWalletAta,
         wallet,
-        BigInt(shares[sai]) * BigInt(decimals), // Share for the subaccount 
-        [],
-        TOKEN_PROGRAM_ID
+        // shares[sai],
+        BigInt(shares[sai]) * BigInt(decimals) // Share for the subaccount 
       )
     )
   }

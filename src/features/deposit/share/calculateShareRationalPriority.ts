@@ -15,26 +15,27 @@ import { IPortfolio } from "../../portfolio/portfolio"
 export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): Promise<number[]> => {
   const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
 
-  const currentSaBalances = portfolio.subaccounts.map(async sa => {
-    const saWallet = generateKeypair(mnemonic, { accountIndex: portfolio.index, subaccountIndex: sa.index })
-    const saWalletAta = await getAssociatedTokenAddress(
-      usdcMint,
-      saWallet.publicKey
-    )
+  const currentSaBalances = await Promise.all(
+    portfolio.subaccounts.map(async sa => {
+      const saWallet = generateKeypair(mnemonic, { accountIndex: portfolio.index, subaccountIndex: sa.index })
+      const saWalletAta = await getAssociatedTokenAddress(
+        usdcMint,
+        saWallet.publicKey
+      )
 
-    //
-    // If subaccaunt `saWallet` has no balance,
-    // add create ATA instruction
-    //
-    let saBalance: number = 0;
-    try {
-      const result = await connection.getTokenAccountBalance(saWalletAta)
-      saBalance = result.value.uiAmount!
-    } catch (error) {
+      //
+      // If subaccaunt `saWallet` has no balance,
+      // add create ATA instruction
+      //
+      let saBalance: number = 0;
+      try {
+        const result = await connection.getTokenAccountBalance(saWalletAta)
+        saBalance = Number(result.value.amount)
+      } catch (error) {
 
-    }
-    return currentSaBalances
-  })
+      }
+      return saBalance
+    }))
 
   //
   // Distribute the amount to reach the goal

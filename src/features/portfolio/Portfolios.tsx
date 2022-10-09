@@ -49,8 +49,8 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
         <TableCell align="center">
           <Link to={`/deposit/${portfolio.index}`}>
             <IconButton >
-              <BankIcon color='primary' />
-              Fund the Portfolio
+              <BankIcon color='primary' sx={{ textDecoration: "none" }} />
+              Deposit
             </IconButton>
 
           </Link>
@@ -69,7 +69,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    <TableCell>Goal $USDC</TableCell>
+                    <TableCell>Goal/Balance $USDC</TableCell>
                     <TableCell>Name</TableCell>
                   </TableRow>
                 </TableHead>
@@ -81,10 +81,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                           <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
                         </TableCell>
                         <TableCell>
-                          {
-                            portfolio.type != PortfolioType.Even &&
-                            <AccountBalance portfolio={portfolio} accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
-                          }
+                          <AccountBalance portfolio={portfolio} accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
                         </TableCell>
                         <TableCell>
                           {subaccount.name}

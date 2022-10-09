@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { AccountBalance } from "@mui/icons-material"
 import { Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
@@ -11,6 +10,7 @@ import { useParams } from "react-router-dom"
 import { RootState } from "../../app/store"
 import { generateKeypair } from "../../utils/solanaKeyGen"
 import { useGetPortfoliosQuery } from "../api/apiSlice"
+import { AccountBalance } from "../portfolio/AccountBalance"
 import { AccountJazzIcon } from "../portfolio/AccountJazzicon"
 import { IPortfolio, PortfolioType } from "../portfolio/portfolio"
 import { depositToPortfolio } from "./portfolioManager"
@@ -80,7 +80,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
 
 
   const [shares, setShares] = useState<number[]>([])
-
+  const isSharesGreaterThanZero = shares.reduce((p, c) => p + c, 0) > 0
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -131,6 +131,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell>Share $USDC</TableCell>
+                <TableCell>Balance/Goal</TableCell>
                 <TableCell>Name</TableCell>
               </TableRow>
             </TableHead>
@@ -149,6 +150,9 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                         }
                       </TableCell>
                       <TableCell>
+                        <AccountBalance accountIndex={ai} portfolio={portfolio} subaccountIndex={sai} />
+                      </TableCell>
+                      <TableCell>
                         {subaccount.name}
                       </TableCell>
                     </TableRow>
@@ -164,7 +168,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
         <Button
           fullWidth
           variant="contained"
-          disabled={!isValid}
+          disabled={!isValid || !isSharesGreaterThanZero}
           onClick={
             handleSubmit(
               async (data, e) => {
@@ -173,10 +177,10 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                 const tx = await depositToPortfolio(connection, publicKey!, portfolio, mnemonicStr, shares)
                 sendTransaction(
                   tx,
-                  connection,  
-                  { 
-                    preflightCommitment: "processed", 
-                    maxRetries: 5 
+                  connection,
+                  {
+                    preflightCommitment: "processed",
+                    maxRetries: 5
                   }
                 )
               },

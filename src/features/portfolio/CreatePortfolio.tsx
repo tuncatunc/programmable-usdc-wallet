@@ -3,7 +3,6 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Hashicon } from "@emeraldpay/hashicon-react"
-import { useDispatch } from "react-redux"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -153,7 +152,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
           if (type == PortfolioType.Even) {
             return <>
-              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center"}} key={index}>
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
