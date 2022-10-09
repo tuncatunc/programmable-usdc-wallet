@@ -31,13 +31,11 @@ export const withdraw = async (
   // If subaccaunt `saWallet` has no balance,
   // add create ATA instruction
   //
-  let toTokenBalance: BigInt = BigInt(0);
   let toAtaExists = false;
   let decimals: number = 6
   try {
     const result = await connection.getTokenAccountBalance(saWalletAta)
     toAtaExists = true;
-    toTokenBalance = BigInt(result.value.amount!) // subaccount balance
   } catch (error) {
 
   }
@@ -61,9 +59,7 @@ export const withdraw = async (
       saWalletAta,
       toAta,
       saWallet.publicKey,
-      // shares[sai],
-      BigInt(amount) * BigInt(decimals), // Share for the subaccount 
-
+      BigInt(amount) * BigInt(decimals) // Share for the subaccount 
     )
   )
 
