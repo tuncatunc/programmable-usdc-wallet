@@ -1,5 +1,6 @@
 import { getAssociatedTokenAddress } from "@solana/spl-token"
 import { Connection, PublicKey } from "@solana/web3.js"
+import { usdcMint } from "../../../common/usdcMint"
 import { generateKeypair } from "../../../utils/solanaKeyGen"
 import { IPortfolio } from "../../portfolio/portfolio"
 
@@ -13,7 +14,6 @@ import { IPortfolio } from "../../portfolio/portfolio"
 // If all accounts reach % during a deposit, a new spill-over account will be created within the subaccount portfolio. In this case, Account 5, having no goal determined yet. Funds can be transferred back to main account to be distributed later.
 
 export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): Promise<number[]> => {
-  const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
 
   const currentSaBalances = await Promise.all(
     portfolio.subaccounts.map(async sa => {

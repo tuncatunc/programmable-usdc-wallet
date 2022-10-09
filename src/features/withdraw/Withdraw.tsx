@@ -7,6 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { RootState } from "../../app/store";
+import { usdcMint } from "../../common/usdcMint";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
 import { IPortfolio } from "../portfolio/portfolio";
@@ -59,7 +60,6 @@ export const Withdraw = (props: WithdrawProps) => {
   useEffect(() => {
 
     const getTokenBalance = async () => {
-      const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
       var mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
       const saWallet = generateKeypair(mnemonicStr, { accountIndex: ai, subaccountIndex: sai })
       const subaccountAta = await getAssociatedTokenAddress(

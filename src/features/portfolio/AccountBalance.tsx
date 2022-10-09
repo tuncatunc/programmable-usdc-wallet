@@ -13,6 +13,7 @@ import { generateKeypair } from "../../utils/solanaKeyGen";
 import { PublicKey } from "@solana/web3.js";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
 import { IPortfolio } from "./portfolio";
+import { usdcMint } from "../../common/usdcMint";
 
 export interface AccountBalanceProps {
   portfolio: IPortfolio;
@@ -36,7 +37,6 @@ export const AccountBalance = (props: AccountBalanceProps) => {
     const getTokenBalance = async () => {
       const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
       const { publicKey } = generateKeypair(mnemonicStr, { accountIndex, subaccountIndex })
-      const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
       
       const subaccountAta = await getAssociatedTokenAddress(
         usdcMint,

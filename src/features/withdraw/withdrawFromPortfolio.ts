@@ -1,5 +1,6 @@
 import { createAssociatedTokenAccountInstruction, createTransferInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, sendAndConfirmTransaction, PublicKey, clusterApiUrl, Transaction } from "@solana/web3.js";
+import { usdcMint } from "../../common/usdcMint";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 
 export const withdraw = async (
@@ -15,7 +16,6 @@ export const withdraw = async (
     "confirmed"
   );
 
-  const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
   let tx = new Transaction();
   const toAta = await getAssociatedTokenAddress(
     usdcMint,

@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { RootState } from "../../app/store"
+import { usdcMint } from "../../common/usdcMint"
 import { generateKeypair } from "../../utils/solanaKeyGen"
 import { useGetPortfoliosQuery } from "../api/apiSlice"
 import { AccountBalance } from "../portfolio/AccountBalance"
@@ -62,7 +63,6 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
   useEffect(() => {
 
     const getTokenBalance = async () => {
-      const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
 
       const subaccountAta = await getAssociatedTokenAddress(
         usdcMint,

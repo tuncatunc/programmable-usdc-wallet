@@ -5,6 +5,7 @@ import { generateKeypair } from "../../utils/solanaKeyGen";
 import { calculateShareEven } from "./share/calculateShareEven";
 import { IPortfolio, PortfolioType } from "../portfolio/portfolio";
 import { calculateShare } from "./share";
+import { usdcMint } from "../../common/usdcMint";
 
 
 // Creates transactions 
@@ -14,7 +15,6 @@ export const depositToPortfolio = async (
   portfolio: IPortfolio,
   mnemonic: string,
   shares: number[]): Promise<Transaction> => {
-  const usdcMint = new PublicKey("GZboZw3r9kpLEsBrUBUxQX7cxdWLwMxSp9PLmwASmqf")
   let tx = new Transaction();
   const walletAta = await getAssociatedTokenAddress(
     usdcMint,
