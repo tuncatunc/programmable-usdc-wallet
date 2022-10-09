@@ -12,7 +12,8 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
-import { AccountBalance as BankIcon } from '@mui/icons-material';
+import { AccountBalance as BankIcon, Outbound as WithdrawIcon } from '@mui/icons-material';
+import OutputIcon from '@mui/icons-material/Output';
 
 import { IPortfolio, PortfolioType } from './portfolio';
 import { AccountJazzIcon } from './AccountJazzicon';
@@ -71,6 +72,7 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                     <TableCell></TableCell>
                     <TableCell>Goal/Balance $USDC</TableCell>
                     <TableCell>Name</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -85,6 +87,16 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                         </TableCell>
                         <TableCell>
                           {subaccount.name}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Link to={`/withdraw/${portfolio.index}/${subaccount.index}`}>
+                            <IconButton >
+                              <WithdrawIcon color='primary' sx={{ textDecoration: "none" }} />
+                              Withdraw
+                            </IconButton>
+
+                          </Link>
+
                         </TableCell>
                       </TableRow>
                     ))
@@ -120,7 +132,7 @@ export const Portfolios = () => {
         Portfolios
       </Typography>
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" stickyHeader={true}>
           <TableHead>
             <TableRow>
               <TableCell></TableCell>

@@ -19,6 +19,7 @@ import { EditPortfolio } from "./EditPortfolio";
 import { Portfolios } from "./Portfolios";
 import { Mnemonic } from "./Mnemonic";
 import { PorfolioDeposit } from "./PortfolioDeposit";
+import { Withdraw } from "./Withdraw";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "deposit/:accountIndex",
         element: <PorfolioDeposit />
+      },
+      {
+        path: "withdraw/:accountIndex/:subaccountIndex",
+        element: <Withdraw />
       }
     ]
   }
