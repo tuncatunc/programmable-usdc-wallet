@@ -9,7 +9,7 @@ export const calculateShare = async (
   amount: number,
   connection: Connection,
   mnemonic: string
-): Promise<number[]> => {
+): Promise<bigint[]> => {
   switch (portfolio.type) {
     case PortfolioType.Even:
       return Promise.resolve(calculateShareEven(portfolio, amount))

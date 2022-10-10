@@ -13,7 +13,7 @@ import { generateKeypair } from "../../utils/solanaKeyGen";
 import { PublicKey } from "@solana/web3.js";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
 import { IPortfolio } from "./portfolio";
-import { usdcMint } from "../../common/usdcMint";
+import { decimals, usdcMint } from "../../common/usdcMint";
 
 export interface AccountBalanceProps {
   portfolio: IPortfolio;
@@ -30,7 +30,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
     (state: RootState) => state.mnemonic
   )
 
-  const [tokenBalance, setTokenBalance] = useState<BigInt>(BigInt(0))
+  const [tokenBalance, setTokenBalance] = useState<bigint>(0n)
 
   useEffect(() => {
 
@@ -45,7 +45,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
       // Get account USDC balance
       const tokenAccountInfo = await getAccount(connection, subaccountAta)
-      setTokenBalance(tokenAccountInfo.amount)
+      setTokenBalance(tokenAccountInfo.amount / 1000000n)
     }
 
     getTokenBalance()

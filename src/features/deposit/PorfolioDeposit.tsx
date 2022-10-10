@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { RootState } from "../../app/store"
-import { usdcMint } from "../../common/usdcMint"
+import { decimals, usdcMint } from "../../common/usdcMint"
 import { generateKeypair } from "../../utils/solanaKeyGen"
 import { useGetPortfoliosQuery } from "../api/apiSlice"
 import { AccountBalance } from "../portfolio/AccountBalance"
@@ -58,7 +58,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
   const mnemonic = useSelector(
     (state: RootState) => state.mnemonic
   )
-  const [walletTokenBalance, setWalletTokenBalance] = useState<number>(0)
+  const [walletTokenBalance, setWalletTokenBalance] = useState<bigint>(0n)
 
   useEffect(() => {
 
@@ -71,7 +71,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
 
       // Get account USDC balance
       const tokenAccountInfo = await getAccount(connection, subaccountAta)
-      setWalletTokenBalance(Number(tokenAccountInfo.amount))
+      setWalletTokenBalance(tokenAccountInfo.amount / 1000000n)
       console.log(tokenAccountInfo.amount)
     }
 
@@ -79,8 +79,8 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
   }, [])
 
 
-  const [shares, setShares] = useState<number[]>([])
-  const isSharesGreaterThanZero = shares.reduce((p, c) => p + c, 0) > 0
+  const [shares, setShares] = useState<bigint[]>([])
+  const isSharesGreaterThanZero = shares.reduce((p, c) => p + c, 0n) > 0n
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -88,7 +88,9 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Typography variant="body1" marginBottom={3}> Wallet's USDC Balance is {walletTokenBalance}</ Typography>
+        <Typography variant="body1" marginBottom={3}>
+          {`Wallet's USDC Balance is ${walletTokenBalance}`}
+        </ Typography>
       </Grid>
 
       {/* Amount */}
@@ -99,7 +101,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
           rules={{
             required: true,
             min: 0,
-            max: walletTokenBalance
+            max: Number(walletTokenBalance)
           }}
 
           render={({ field }) => {
@@ -139,15 +141,18 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
               {
                 portfolio.subaccounts.map((subaccount, sai) => { // si: share index
                   const share = shares[sai]
+                  let sbstr: string = ""
+                  if (share) { 
+                    const sb = BigInt(share) / BigInt(decimals)
+                    sbstr = sb.toString()
+                  }
                   return (
                     <TableRow key={sai}>
                       <TableCell component="th" scope="row">
                         <AccountJazzIcon accountIndex={ai} subaccountIndex={sai} />
                       </TableCell>
                       <TableCell>
-                        {
-                          share // Share
-                        }
+                        {sbstr}
                       </TableCell>
                       <TableCell>
                         <AccountBalance accountIndex={ai} portfolio={portfolio} subaccountIndex={sai} />

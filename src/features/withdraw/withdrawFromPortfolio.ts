@@ -1,6 +1,6 @@
 import { createAssociatedTokenAccountInstruction, createTransferInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, sendAndConfirmTransaction, PublicKey, clusterApiUrl, Transaction } from "@solana/web3.js";
-import { usdcMint } from "../../common/usdcMint";
+import { decimals, usdcMint } from "../../common/usdcMint";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 
 export const withdraw = async (
@@ -32,7 +32,6 @@ export const withdraw = async (
   // add create ATA instruction
   //
   let toAtaExists = false;
-  let decimals: number = 6
   try {
     const result = await connection.getTokenAccountBalance(saWalletAta)
     toAtaExists = true;
@@ -59,7 +58,7 @@ export const withdraw = async (
       saWalletAta,
       toAta,
       saWallet.publicKey,
-      BigInt(amount) * BigInt(decimals) // Share for the subaccount 
+      BigInt(amount) * decimals) // Share for the subaccount 
     )
   )
 

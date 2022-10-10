@@ -13,7 +13,7 @@ import { IPortfolio } from "../../portfolio/portfolio"
 // Account Goal: $10,000. Deposit: $0 / 0% of deposit
 // If all accounts reach % during a deposit, a new spill-over account will be created within the subaccount portfolio. In this case, Account 5, having no goal determined yet. Funds can be transferred back to main account to be distributed later.
 
-export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): Promise<number[]> => {
+export const calculateShareRationalPriority = async (portfolio: IPortfolio, amount: number, connection: Connection, mnemonic: string): Promise<bigint[]> => {
 
   const currentSaBalances = await Promise.all(
     portfolio.subaccounts.map(async sa => {
@@ -41,13 +41,13 @@ export const calculateShareRationalPriority = async (portfolio: IPortfolio, amou
   // Distribute the amount to reach the goal
   //
   let remaining = amount;
-  const shares: number[] = []
+  const shares: bigint[] = []
   for (let sai = 0; sai < portfolio.subaccounts.length; sai++) {
     const sa = portfolio.subaccounts[sai];
     const diff = sa.goal - currentSaBalances[sai];
     const goalReached = diff <= 0
     if (goalReached) {
-      shares[sai] = 0
+      shares[sai] = 0n
       continue
     }
 
@@ -55,11 +55,11 @@ export const calculateShareRationalPriority = async (portfolio: IPortfolio, amou
     // If there is remaining balance to fill the goal
     //
     if (diff <= remaining) {
-      shares[sai] = diff
+      shares[sai] = BigInt(diff)
       remaining -= diff
     }
     else if (diff > remaining) {
-      shares[sai] = remaining
+      shares[sai] = BigInt(remaining)
       remaining = 0
     }
   }

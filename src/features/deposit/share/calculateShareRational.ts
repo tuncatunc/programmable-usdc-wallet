@@ -9,8 +9,8 @@ import { IPortfolio } from "../../portfolio/portfolio"
 // Account Goal $200,000. Deposit: $20,000 / 20% ratio setting
 // Account Goal $50,000. Deposit: $5,000 / 5% ratio setting
 
-export const calculateShareRational = (portfolio: IPortfolio, amount: number, connection: Connection): number[] => {
+export const calculateShareRational = (portfolio: IPortfolio, amount: number, connection: Connection): bigint[] => {
   const total = portfolio.subaccounts.map(sa => sa.goal).reduce((prev, curr) => prev + curr, 0)
-  const shares = portfolio.subaccounts.map(sa => Math.floor(amount * sa.goal / total))
+  const shares = portfolio.subaccounts.map(sa => BigInt(amount * sa.goal / total))
   return shares
 }

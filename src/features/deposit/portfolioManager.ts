@@ -14,7 +14,7 @@ export const depositToPortfolio = async (
   wallet: PublicKey,
   portfolio: IPortfolio,
   mnemonic: string,
-  shares: number[]): Promise<Transaction> => {
+  shares: bigint[]): Promise<Transaction> => {
   let tx = new Transaction();
   const walletAta = await getAssociatedTokenAddress(
     usdcMint,
@@ -28,22 +28,21 @@ export const depositToPortfolio = async (
       usdcMint,
       saWallet.publicKey
     )
-  
+
     //
     // If subaccaunt `saWallet` has no balance,
     // add create ATA instruction
     //
     let saBalance: BigInt = BigInt(0);
     let saAtaExists = false;
-    let decimals: number = 6
     try {
       const result = await connection.getTokenAccountBalance(saWalletAta)
       saAtaExists = true;
       saBalance = BigInt(result.value.amount!) // subaccount balance
     } catch (error) {
-  
+
     }
-  
+
     if (!saAtaExists) {
       tx.add(
         createAssociatedTokenAccountInstruction(
@@ -54,7 +53,7 @@ export const depositToPortfolio = async (
         )
       )
     }
-  
+
     //
     // Transfer share instruction
     //
@@ -63,11 +62,10 @@ export const depositToPortfolio = async (
         walletAta,
         saWalletAta,
         wallet,
-        // shares[sai],
-        BigInt(shares[sai]) * BigInt(decimals) // Share for the subaccount 
-      )
+        shares[sai]
+      ) // Share for the subaccount 
     )
   }
 
-  return tx;
+return tx;
 }
