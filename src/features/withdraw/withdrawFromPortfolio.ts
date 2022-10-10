@@ -58,7 +58,7 @@ export const withdraw = async (
       saWalletAta,
       toAta,
       saWallet.publicKey,
-      BigInt(amount) * decimals) // Share for the subaccount 
+      BigInt(amount) * decimals // Share for the subaccount 
     )
   )
 
