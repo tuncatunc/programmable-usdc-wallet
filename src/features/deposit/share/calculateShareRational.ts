@@ -11,6 +11,6 @@ import { IPortfolio } from "../../portfolio/portfolio"
 
 export const calculateShareRational = (portfolio: IPortfolio, amount: number, connection: Connection): bigint[] => {
   const total = portfolio.subaccounts.map(sa => sa.goal).reduce((prev, curr) => prev + curr, 0)
-  const shares = portfolio.subaccounts.map(sa => BigInt(amount * sa.goal / total))
+  const shares = portfolio.subaccounts.map(sa => BigInt(Math.floor(amount * sa.goal / total)))
   return shares
 }
