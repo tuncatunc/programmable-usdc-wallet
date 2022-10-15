@@ -30,7 +30,7 @@ export const calculateShareRationalPriority = async (portfolio: IPortfolio, amou
       let saBalance: number = 0;
       try {
         const result = await connection.getTokenAccountBalance(saWalletAta)
-        saBalance = Number(result.value.amount)
+        saBalance = Math.floor(Number(result.value.amount)  / 1000000)
       } catch (error) {
 
       }
