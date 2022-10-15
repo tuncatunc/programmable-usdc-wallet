@@ -62,7 +62,7 @@ export const depositToPortfolio = async (
         walletAta,
         saWalletAta,
         wallet,
-        shares[sai]
+        shares[sai] * 1000000n
       ) // Share for the subaccount 
     )
   }

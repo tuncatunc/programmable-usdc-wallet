@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { connect, useSelector } from "react-redux";
 import {
@@ -12,7 +12,7 @@ import { RootState } from "../../app/store";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { PublicKey } from "@solana/web3.js";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
-import { IPortfolio } from "./portfolio";
+import { IPortfolio, PortfolioType } from "./portfolio";
 import { decimals, usdcMint } from "../../common/usdcMint";
 
 export interface AccountBalanceProps {
@@ -45,15 +45,17 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
       // Get account USDC balance
       const tokenAccountInfo = await getAccount(connection, subaccountAta)
-      setTokenBalance(tokenAccountInfo.amount / 1000000n)
+      setTokenBalance(tokenAccountInfo.amount / 1000000n) // USDC is 6 decimals
     }
 
     getTokenBalance()
   }, [])
 
   return (
-    <Box>
-      {tokenBalance.toString()} / {portfolio.subaccounts[subaccountIndex].goal}
-    </Box>
+    <Typography variant="body1">
+      {tokenBalance.toString()} 
+      {portfolio.type != PortfolioType.Even && "/"}
+      {portfolio.type != PortfolioType.Even && portfolio.subaccounts[subaccountIndex].goal} USDC
+    </Typography>
   )
 }

@@ -6,7 +6,7 @@ import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js"
 import { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { RootState } from "../../app/store"
 import { decimals, usdcMint } from "../../common/usdcMint"
 import { generateKeypair } from "../../utils/solanaKeyGen"
@@ -33,6 +33,8 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
   const { ai } = props
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection()
+  const navigate = useNavigate();
+
   const {
     data: portfolios,
     isLoading,
@@ -114,7 +116,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                 onChange={async (e) => {
                   field.onChange(e)
                   var mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
-                  const s = await calculateShare(portfolio, getValues().amount, connection, mnemonicStr)
+                  const s = await calculateShare(portfolio, Number(getValues().amount), connection, mnemonicStr)
                   setShares(s)
                 }}
                 error={errors?.amount?.message != undefined}
@@ -143,8 +145,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                   const share = shares[sai]
                   let sbstr: string = ""
                   if (share) { 
-                    const sb = BigInt(share) / BigInt(decimals)
-                    sbstr = sb.toString()
+                    sbstr = share.toString()
                   }
                   return (
                     <TableRow key={sai}>
@@ -180,7 +181,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                 console.log(`Deposit ${data.amount} into portfolio`)
                 var mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
                 const tx = await depositToPortfolio(connection, publicKey!, portfolio, mnemonicStr, shares)
-                sendTransaction(
+                await sendTransaction(
                   tx,
                   connection,
                   {
@@ -188,6 +189,8 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                     maxRetries: 5
                   }
                 )
+                alert(`${data.amount} USDC transfer is submitted!`)
+                navigate("/portfolios")
               },
               (errors, e) => {
                 console.error(errors, e)

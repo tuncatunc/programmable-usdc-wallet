@@ -10,6 +10,8 @@ import { RootState } from "../../app/store";
 import { usdcMint } from "../../common/usdcMint";
 import { generateKeypair } from "../../utils/solanaKeyGen";
 import { useGetPortfoliosQuery } from "../api/apiSlice";
+import { AccountBalance } from "../portfolio/AccountBalance";
+import { AccountJazzIcon } from "../portfolio/AccountJazzicon";
 import { IPortfolio } from "../portfolio/portfolio";
 import { withdraw } from "./withdrawFromPortfolio";
 
@@ -69,7 +71,7 @@ export const Withdraw = (props: WithdrawProps) => {
 
       // Get account USDC balance
       const tokenAccountInfo = await getAccount(connection, subaccountAta)
-      setSaTokenBalance(Number(tokenAccountInfo.amount))
+      setSaTokenBalance(Number(tokenAccountInfo.amount / 1000000n))
       console.log(tokenAccountInfo.amount)
     }
 
@@ -79,11 +81,17 @@ export const Withdraw = (props: WithdrawProps) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h1" marginBottom={3}> Deposit USDC Into Portfolio</ Typography>
+        <Typography variant="h1" marginBottom={3}>
+          Withdraw from Subaccount
+        </ Typography>
+      </Grid>
+      
+      <Grid item xs={4}>
+        <AccountJazzIcon accountIndex={ai} subaccountIndex={sai} />
       </Grid>
 
-      <Grid item xs={12}>
-        <Typography variant="body1" marginBottom={3}> Portfolio Account' USDC Balance is {saTokenBalance}</ Typography>
+      <Grid item xs={8}>
+        <AccountBalance accountIndex={ai}  portfolio={portfolio} subaccountIndex={sai} />
       </Grid>
 
       {/* Amount */}
