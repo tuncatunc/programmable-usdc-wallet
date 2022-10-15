@@ -1,7 +1,7 @@
 export enum PortfolioType {
-  Even = "Even",
-  Rational = "Rational",
-  RationalPriority = "Rational Priority"
+  Even = "Evenly Distribution",
+  Rational = "Rational Distribution",
+  RationalPriority = "Waterfall Distribution"
 };
 
 export interface Subaccount {

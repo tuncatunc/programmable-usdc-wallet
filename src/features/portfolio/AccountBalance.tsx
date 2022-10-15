@@ -37,7 +37,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
     const getTokenBalance = async () => {
       const mnemonicStr = mnemonic.words.map(w => w.word).join(" ")
       const { publicKey } = generateKeypair(mnemonicStr, { accountIndex, subaccountIndex })
-      
+
       const subaccountAta = await getAssociatedTokenAddress(
         usdcMint,
         publicKey
@@ -53,9 +53,18 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
   return (
     <Typography variant="body1">
-      {tokenBalance.toString()} 
-      {portfolio.type != PortfolioType.Even && "/"}
-      {portfolio.type != PortfolioType.Even && portfolio.subaccounts[subaccountIndex].goal} USDC
+      {
+        portfolio.type == PortfolioType.Rational &&
+        `${portfolio.subaccounts[subaccountIndex].goal}% / ${tokenBalance}`
+      }
+      {
+        portfolio.type == PortfolioType.Even &&
+        `${tokenBalance}`
+      }
+      {
+        portfolio.type == PortfolioType.RationalPriority &&
+        `${tokenBalance} / ${portfolio.subaccounts[subaccountIndex].goal}`
+      }
     </Typography>
   )
 }

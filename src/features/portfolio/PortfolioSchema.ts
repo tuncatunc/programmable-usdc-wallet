@@ -7,8 +7,25 @@ export const portfolioSchema =  Yup.object().shape({
     .of(
       Yup.object().shape({
         goal: Yup.number()
-          .min(10, "min amount is $10")
-          .required("Goal is required")
+          .min(1, "min amount is $1")
+          .required("Required")
+          .transform(ensureNumber),
+        name: Yup.string()
+          .required("Name is required")
+          .default("Account name")
+      })
+    ).min(1),
+  name: Yup.string().required("Portfolio name is required")
+});
+
+export const rationalPortfolioSchema =  Yup.object().shape({
+  subaccounts: Yup.array()
+    .of(
+      Yup.object().shape({
+        goal: Yup.number()
+          .min(0, "min  0%")
+          .max(100, "max is 100%")
+          .required("Required")
           .transform(ensureNumber),
         name: Yup.string()
           .required("Name is required")

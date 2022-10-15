@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { PortfolioType, IPortfolio, Subaccount } from "./portfolio"
 import { useCreatePortfolioMutation, useGetPortfoliosQuery, useUpdatePortfolioMutation } from '../api/apiSlice';
 
-import { portfolioSchema } from "./PortfolioSchema";
+import { portfolioSchema, rationalPortfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
   const navigate = useNavigate()
   const { publicKey } = useWallet();
   const [createPortfolio, { isLoading: isCreating }] = useCreatePortfolioMutation()
-  const [updatePortfolio, {isLoading: isUpdating}] = useUpdatePortfolioMutation()
+  const [updatePortfolio, { isLoading: isUpdating }] = useUpdatePortfolioMutation()
 
   const {
     data: portfolios,
@@ -45,7 +45,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
     {
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: yupResolver(portfolioSchema),
+      resolver: portfolios[props!.ai].type == PortfolioType.Rational ? yupResolver(rationalPortfolioSchema) : yupResolver(portfolioSchema),
     }
   );
 
@@ -152,7 +152,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
           if (type == PortfolioType.Even) {
             return <>
-              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center"}} key={index}>
+              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} key={index}>
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
               </Grid>
@@ -196,65 +196,138 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
             </>
           }
 
-          return (
-            <>
-              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                {/* TODO: Create account address from derivation path */}
-                <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
-              </Grid>
-              <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
-                <Controller
-                  key={field.id}
-                  {...{ control, index, field }}
-                  name={`subaccounts.${index}.goal`}
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    return (
-                      <TextField
-                        fullWidth
-                        label={"Goal $USDC"}
-                        type="number" {...field}
-                        error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
-                        helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
-                    );
-                  }}
+          if (type == PortfolioType.RationalPriority) {
+            return (
+              <>
+                <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  {/* TODO: Create account address from derivation path */}
+                  <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+                </Grid>
+                <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                  <Controller
+                    key={field.id}
+                    {...{ control, index, field }}
+                    name={`subaccounts.${index}.goal`}
+                    rules={{ required: true }}
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          fullWidth
+                          label={"Goal $USDC"}
+                          type="number" {...field}
+                          error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
+                          helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
+                      );
+                    }}
 
-                />
-              </Grid>
-              <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
-                <Controller
-                  key={field.id}
-                  {...{ control, index, field }}
-                  name={`subaccounts.${index}.name`}
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    return (
-                      <TextField
-                        fullWidth
-                        label={"Name"}
-                        type="text" {...field}
-                        error={errors?.subaccounts && errors.subaccounts[index]?.name?.message != undefined}
-                        helperText={errors?.subaccounts && errors.subaccounts[index]?.name?.message} />
-                    );
-                  }}
+                  />
+                </Grid>
+                <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                  <Controller
+                    key={field.id}
+                    {...{ control, index, field }}
+                    name={`subaccounts.${index}.name`}
+                    rules={{ required: true }}
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          fullWidth
+                          label={"Name"}
+                          type="text" {...field}
+                          error={errors?.subaccounts && errors.subaccounts[index]?.name?.message != undefined}
+                          helperText={errors?.subaccounts && errors.subaccounts[index]?.name?.message} />
+                      );
+                    }}
 
-                />
-              </Grid>
-              <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <IconButton
-                  color="primary"
-                  aria-label="remove subaccount"
-                  onClick={
-                    () => {
-                      remove(field.index)
+                  />
+                </Grid>
+                <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <IconButton
+                    color="primary"
+                    aria-label="remove subaccount"
+                    onClick={
+                      () => {
+                        remove(field.index)
+                      }
                     }
-                  }
-                >
-                  <RemoveIcon />
-                </IconButton>
-              </Grid>
-            </>
-          )
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                </Grid>
+              </>
+            )
+          }
+          else if (type == PortfolioType.Rational) {
+            return (
+              <>
+                <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  {/* TODO: Create account address from derivation path */}
+                  <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
+                </Grid>
+                <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                  <Controller
+                    key={field.id}
+                    {...{ control, index, field }}
+                    name={`subaccounts.${index}.goal`}
+                    rules={{
+                      required: true,
+                      min: 0,
+                      max: 100
+                    }}
+          
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          fullWidth
+                          label={"Percentage"}
+                          type="number" {...field}
+                          onChange={async (e) => {
+                            field.onChange(e)
+                            // Validate sum if fields are 100
+                          }}
+          
+                          error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
+                          helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
+                      );
+                    }}
+
+                  />
+                </Grid>
+                <Grid item xs={4} sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+                  <Controller
+                    key={field.id}
+                    {...{ control, index, field }}
+                    name={`subaccounts.${index}.name`}
+                    rules={{ required: true }}
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          fullWidth
+                          label={"Name"}
+                          type="text" {...field}
+                          error={errors?.subaccounts && errors.subaccounts[index]?.name?.message != undefined}
+                          helperText={errors?.subaccounts && errors.subaccounts[index]?.name?.message} />
+                      );
+                    }}
+
+                  />
+                </Grid>
+                <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <IconButton
+                    color="primary"
+                    aria-label="remove subaccount"
+                    onClick={
+                      () => {
+                        remove(field.index)
+                      }
+                    }
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                </Grid>
+              </>
+            )
+          }
         })
       }
 

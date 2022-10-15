@@ -70,7 +70,14 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    <TableCell>Goal/Balance $USDC</TableCell>
+                    {
+                      portfolio.type == PortfolioType.Rational &&
+                      <TableCell>Percentage / Balance</TableCell>
+                    }
+                    {
+                      portfolio.type != PortfolioType.Rational &&
+                      <TableCell>Goal/Balance $USDC</TableCell>
+                    }
                     <TableCell>Name</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
