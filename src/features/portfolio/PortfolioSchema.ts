@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 const ensureNumber = (val: number) => (isFinite(val) ? val : undefined);
 
-export const portfolioSchema =  Yup.object().shape({
+export const portfolioSchema = Yup.object().shape({
   subaccounts: Yup.array()
     .of(
       Yup.object().shape({
@@ -18,13 +18,11 @@ export const portfolioSchema =  Yup.object().shape({
   name: Yup.string().required("Portfolio name is required")
 });
 
-export const rationalPortfolioSchema =  Yup.object().shape({
+export const rationalPortfolioSchema = Yup.object().shape({
   subaccounts: Yup.array()
     .of(
       Yup.object().shape({
         goal: Yup.number()
-          .min(0, "min  0%")
-          .max(100, "max is 100%")
           .required("Required")
           .transform(ensureNumber),
         name: Yup.string()

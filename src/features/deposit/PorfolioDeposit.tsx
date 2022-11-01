@@ -135,7 +135,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell>Share $USDC</TableCell>
-                <TableCell>Balance/Goal</TableCell>
+                <TableCell>Balance</TableCell>
                 <TableCell>Name</TableCell>
               </TableRow>
             </TableHead>

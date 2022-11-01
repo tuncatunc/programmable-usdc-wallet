@@ -13,6 +13,7 @@ import { portfolioSchema, rationalPortfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect } from "react";
+import { DevTool } from "@hookform/devtools";
 
 interface CreatePortfolioProps {
   isEdit: boolean; // In edit mode
@@ -34,6 +35,13 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
     error
   } = useGetPortfoliosQuery(publicKey!.toBase58().toString())
 
+  let resolver = yupResolver(portfolioSchema);
+
+  if (portfolios.length &&
+    portfolios[props!.ai].type == PortfolioType.Rational) {
+    resolver = yupResolver(rationalPortfolioSchema)
+  }
+
   const {
     control,
     formState: { isValid, errors },
@@ -45,7 +53,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
     {
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: portfolios[props!.ai].type == PortfolioType.Rational ? yupResolver(rationalPortfolioSchema) : yupResolver(portfolioSchema),
+      resolver: resolver,
     }
   );
 
@@ -195,7 +203,6 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
             </>
           }
-
           if (type == PortfolioType.RationalPriority) {
             return (
               <>
@@ -274,7 +281,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
                       min: 0,
                       max: 100
                     }}
-          
+
                     render={({ field }) => {
                       return (
                         <TextField
@@ -285,7 +292,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
                             field.onChange(e)
                             // Validate sum if fields are 100
                           }}
-          
+
                           error={errors?.subaccounts && errors.subaccounts[index]?.goal?.message != undefined}
                           helperText={errors?.subaccounts && errors.subaccounts[index]?.goal?.message} />
                       );
@@ -361,6 +368,8 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
           {props?.isEdit ? "Update" : "Create "} Portfolio
         </Button>
       </Grid>
+      <DevTool control={control} /> {/* set up the dev tool */}
+
 
     </Grid>)
 }

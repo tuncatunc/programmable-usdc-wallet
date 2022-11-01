@@ -70,14 +70,12 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    {
-                      portfolio.type == PortfolioType.Rational &&
-                      <TableCell>Percentage / Balance</TableCell>
-                    }
-                    {
-                      portfolio.type != PortfolioType.Rational &&
-                      <TableCell>Goal/Balance $USDC</TableCell>
-                    }
+                    <TableCell>
+                      {portfolio.type == PortfolioType.Even && "Target %"}
+                      {portfolio.type == PortfolioType.Rational && "Target Ratio "}
+                      {portfolio.type == PortfolioType.RationalPriority && "Target $USDC"}
+                    </TableCell>
+                    <TableCell>Balance $USDC</TableCell>
                     <TableCell>Name</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -88,6 +86,9 @@ function PortfolioRow(props: { portfolio: IPortfolio }) {
                       <TableRow key={subaccount.index}>
                         <TableCell component="th" scope="row">
                           <AccountJazzIcon accountIndex={portfolio.index} subaccountIndex={subaccount.index} />
+                        </TableCell>
+                        <TableCell>
+                          {subaccount.goal}
                         </TableCell>
                         <TableCell>
                           <AccountBalance portfolio={portfolio} accountIndex={portfolio.index} subaccountIndex={subaccount.index} />

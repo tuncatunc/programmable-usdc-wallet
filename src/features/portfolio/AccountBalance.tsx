@@ -53,18 +53,7 @@ export const AccountBalance = (props: AccountBalanceProps) => {
 
   return (
     <Typography variant="body1">
-      {
-        portfolio.type == PortfolioType.Rational &&
-        `${portfolio.subaccounts[subaccountIndex].goal}% / ${tokenBalance}`
-      }
-      {
-        portfolio.type == PortfolioType.Even &&
-        `${tokenBalance}`
-      }
-      {
-        portfolio.type == PortfolioType.RationalPriority &&
-        `${tokenBalance} / ${portfolio.subaccounts[subaccountIndex].goal}`
-      }
+      {tokenBalance.toString()}
     </Typography>
   )
 }
