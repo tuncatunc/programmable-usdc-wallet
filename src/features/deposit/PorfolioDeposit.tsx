@@ -132,12 +132,12 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
         <Grid item xs={12}>
           <Table size="small" aria-label="purchases">
             <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell>Share $USDC</TableCell>
-                <TableCell>Balance</TableCell>
-                <TableCell>Name</TableCell>
-              </TableRow>
+              <StyledTableRow>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell>Share $USDC</StyledTableCell>
+                <StyledTableCell>Balance</StyledTableCell>
+                <StyledTableCell>Name</StyledTableCell>
+              </StyledTableRow>
             </TableHead>
             <TableBody>
               {
@@ -148,20 +148,20 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
                     sbstr = share.toString()
                   }
                   return (
-                    <TableRow key={sai}>
-                      <TableCell component="th" scope="row">
+                    <StyledTableRow key={sai}>
+                      <StyledTableCell component="th" scope="row">
                         <AccountJazzIcon accountIndex={ai} subaccountIndex={sai} />
-                      </TableCell>
-                      <TableCell>
+                      </StyledTableCell>
+                      <StyledTableCell>
                         {sbstr}
-                      </TableCell>
-                      <TableCell>
+                      </StyledTableCell>
+                      <StyledTableCell>
                         <AccountBalance accountIndex={ai} portfolio={portfolio} subaccountIndex={sai} />
-                      </TableCell>
-                      <TableCell>
+                      </StyledTableCell>
+                      <StyledTableCell>
                         {subaccount.name}
-                      </TableCell>
-                    </TableRow>
+                      </StyledTableCell>
+                    </StyledTableRow>
                   )
                 })
               }
