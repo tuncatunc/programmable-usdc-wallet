@@ -12,7 +12,7 @@ import { useCreatePortfolioMutation, useGetPortfoliosQuery, useUpdatePortfolioMu
 import { portfolioSchema, rationalPortfolioSchema } from "./PortfolioSchema";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { DevTool } from "@hookform/devtools";
 
 interface CreatePortfolioProps {
@@ -159,7 +159,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
         fields.map((field, index) => {
 
           if (type == PortfolioType.Even) {
-            return <>
+            return <Fragment key={index}>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} key={index}>
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
@@ -201,11 +201,11 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
                 </IconButton>
               </Grid>
 
-            </>
+            </ Fragment>
           }
           if (type == PortfolioType.RationalPriority) {
             return (
-              <>
+              <Fragment key={index}>
                 <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   {/* TODO: Create account address from derivation path */}
                   <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
@@ -261,12 +261,12 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
                     <RemoveIcon />
                   </IconButton>
                 </Grid>
-              </>
+              </ Fragment>
             )
           }
           else if (type == PortfolioType.Rational) {
             return (
-              <>
+              <Fragment key={index}>
                 <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   {/* TODO: Create account address from derivation path */}
                   <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
@@ -332,7 +332,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
                     <RemoveIcon />
                   </IconButton>
                 </Grid>
-              </>
+              </ Fragment>
             )
           }
         })
