@@ -56,6 +56,11 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
       resolver: resolver,
     }
   );
+  
+  const { fields, append, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "subaccounts", // unique name for your Field Array
+  });
 
   useEffect(() => {
 
@@ -76,10 +81,6 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
     }
   }, [portfolios])
 
-  const { fields, append, remove } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "subaccounts", // unique name for your Field Array
-  });
 
   const { type } = getValues()
 
@@ -155,11 +156,12 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
         </IconButton>
       </Grid>
 
+      {/* Subaccounts */}
       {
         fields.map((field, index) => {
 
           if (type == PortfolioType.Even) {
-            return <Fragment key={index}>
+            return <Fragment key={field.id}>
               <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} key={index}>
                 {/* TODO: Create account address from derivation path */}
                 <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
@@ -203,9 +205,9 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
 
             </ Fragment>
           }
-          if (type == PortfolioType.RationalPriority) {
+          else if (type == PortfolioType.RationalPriority) {
             return (
-              <Fragment key={index}>
+              <Fragment key={field.id}>
                 <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   {/* TODO: Create account address from derivation path */}
                   <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />
@@ -266,7 +268,7 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
           }
           else if (type == PortfolioType.Rational) {
             return (
-              <Fragment key={index}>
+              <Fragment key={field.id}>
                 <Grid item xs={2} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   {/* TODO: Create account address from derivation path */}
                   <Hashicon size={40} value={"0x2715d2B6667CA72EEE34C60d20cEdA1e7a277915"} />

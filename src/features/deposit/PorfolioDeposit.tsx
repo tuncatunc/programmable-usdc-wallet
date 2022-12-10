@@ -1,5 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material"
+import { styled } from '@mui/material/styles';
+import { Button, Grid, Table, TableBody, TableHead, TableRow, TextField, Typography } from "@mui/material"
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token"
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js"
@@ -25,6 +27,26 @@ type DeposiftForm = {
 type PortfolioDepositProps = {
   ai: number; // Account Index
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 //
 // Deposit amount into porfolio
