@@ -65,7 +65,6 @@ export const CreatePortfolio = (props?: CreatePortfolioProps) => {
   useEffect(() => {
 
     if (props?.isEdit) {
-      reset();
       const portfolio: IPortfolio = portfolios[props.ai]
       // Set the values from portfolio
       setValue("type", portfolio.type)
