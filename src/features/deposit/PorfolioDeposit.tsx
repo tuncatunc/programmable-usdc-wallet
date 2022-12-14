@@ -128,7 +128,7 @@ export const PorfolioDeposit = (props: PortfolioDepositProps) => {
           render={({ field }) => {
             return (
               <TextField
-                key={field.id}
+                key={field.name}
                 type={"number"}
                 fullWidth
                 label={"Amount"}
